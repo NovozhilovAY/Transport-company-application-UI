@@ -1,4 +1,5 @@
 import HTTP from "@/utils/HTTP";
+import {getHeaders} from "@/utils/AuthHeader";
 
 
 export const CarService = {
@@ -7,7 +8,7 @@ export const CarService = {
 
 async function getAllCars(){
     let result = {};
-    result = await HTTP.get("/api/cars").then(
+    result = await HTTP.get("/api/cars", getHeaders()).then(
     (response)=>{
         return {status: response.status, cars: response.data};
     }).catch((error)=>{
