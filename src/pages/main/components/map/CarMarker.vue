@@ -1,7 +1,19 @@
 <template>
   <GMapMarker :position="getPosition()"
               :icon="getIcon()"
-  ></GMapMarker>
+              @click="openInfoWindow()">
+      <GMapInfoWindow :opened="infoWindowOpen"
+                      :position="getPosition()"
+                      :closeclick="true"
+                      @closeclick="closeInfoWindow()">
+        <div class="info-window">
+          <p class="title">{{this.car.brand}} {{this.car.model}}</p>
+          <p><span class="bold-word">Номер:</span> {{this.car.licensePlate}}</p>
+          <p><span class="bold-word">ТО через:</span> {{this.car.kmBeforeMaint}} км.</p>
+        </div>
+      </GMapInfoWindow>
+  </GMapMarker>
+
 </template>
 
 <script>
@@ -12,6 +24,7 @@ export default {
   name: "CarMarker",
   data(){
     return{
+      infoWindowOpen: false
     }
   },
   props: {
@@ -21,6 +34,7 @@ export default {
     getPosition(){
       return{lat: this.car.latitude,lng: this.car.longitude}
     },
+
     getIcon(){
       if(this.car.kmBeforeMaint <= 0){
         return badMarker;
@@ -29,11 +43,34 @@ export default {
       }else {
         return goodMarker;
       }
+    },
+
+    openInfoWindow(){
+      this.infoWindowOpen = true;
+    },
+
+    closeInfoWindow(){
+      this.infoWindowOpen = false;
     }
+
+
   }
 }
 </script>
 
 <style scoped>
+
+.info-window{
+  font-size: 14px;
+}
+
+.title{
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.bold-word{
+  font-weight: bold;
+}
 
 </style>

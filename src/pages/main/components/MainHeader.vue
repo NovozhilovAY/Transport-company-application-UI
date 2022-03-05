@@ -2,7 +2,7 @@
   <div class="header">
     <div class="left"><p class="title">{{title}}</p></div>
     <div class="center"><p class="login-label">{{username}}</p></div>
-    <div class="right"><button v-on:click="logout" class="exit-btn">выход</button></div>
+    <div class="right"><button @click="logout()" class="exit-btn">выход</button></div>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
     },
     logout(){
       LoginService.logout();
+      this.$router.push({path: '/login', replace: true});
     }
   }
 }

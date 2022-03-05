@@ -4,7 +4,6 @@
            map-type-id="roadmap"
            style="height: 100%;width: 100%"
            class="google-map">
-
     <CarMarker v-for="c in cars" :car="c" :key="c.id"></CarMarker>
   </GMapMap>
 </template>
@@ -19,26 +18,28 @@ export default {
   data: function () {
     return {
       cars: [],
+      updater: {}
     }
   },
   mounted() {
-
-    this.getCars();
+      this.getCars();
+      this.updater = this.updateData();
+  },
+  unmounted() {
+    clearInterval(this.updater);
   },
   methods:{
-    getCars(){
-      setInterval(()=>{
-        CarService.getAllCars().then(result => {
-          if(result.status === 200){
-            console.log(result.status);
-            console.log(result.cars);
-            this.cars = result.cars;
-          }
-        })
-      }, 2000);
+    updateData(){
+      return setInterval((this.getCars), 2000);
     },
-    initCars(){
-
+    getCars(){
+      CarService.getAllCars().then(result => {
+        if(result.status === 200){
+          console.log(result.status);
+          console.log(result.cars);
+          this.cars = result.cars;
+        }
+      })
     }
   }
 }
