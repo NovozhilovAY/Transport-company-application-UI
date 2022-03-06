@@ -1,25 +1,26 @@
 <template>
   <div id="mySidenav" class="sidenav">
-    <button v-on:click="setMenuItem" id = 'item1'>Карта</button>
-    <button v-on:click="setMenuItem" id = 'item2'>item2</button>
-    <button v-on:click="setMenuItem" id = 'item3'>item3</button>
+    <button v-on:click="setMenuItem" id = 'map'>Карта</button>
+    <button v-on:click="setMenuItem" id = 'cars'>Автомобили</button>
+    <button v-on:click="setMenuItem" id = 'drivers'>Водители</button>
+    <button v-on:click="setMenuItem" id = 'users'>Пользователи</button>
   </div>
 
   <div id="main">
-    <div v-if="this.selectedItem === 'item1'">
-      <MainMap></MainMap>
-    </div>
+    <MainMap v-if="this.selectedItem === 'map'"></MainMap>
+    <CarsPanel v-if="this.selectedItem === 'cars'"></CarsPanel>
   </div>
 </template>
 
 <script>
 import MainMap from "@/pages/main/components/map/MainMap";
+import CarsPanel from "@/pages/main/components/cars/CarsPanel";
 export default {
   name: "MainMenu",
-  components: {MainMap},
+  components: {CarsPanel, MainMap},
   data(){
     return{
-      selectedItem: "item1"
+      selectedItem: "map"
     }
   },
 
@@ -41,7 +42,7 @@ export default {
   left: 0;
   background-color: white;
   overflow-x: hidden;
-  padding-top: 20px;
+  padding-top: 10px;
   border-right-style: solid;
   border-right-width: 1px;
 }
@@ -50,9 +51,10 @@ export default {
   width: 100%;
   border-style: none;
   background-color: white;
-  padding: 6px 8px 6px 16px;
+  padding: 12px 8px 12px 6px;
+  margin-top: 5px;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 22px;
   color: #000000;
   display: block;
 }
@@ -62,6 +64,7 @@ export default {
 }
 
 #main {
+  box-sizing: border-box;
   position: fixed;
   margin-left: 160px;
   padding: 0;

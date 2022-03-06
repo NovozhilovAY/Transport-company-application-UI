@@ -1,6 +1,8 @@
 <template>
-  <main-header></main-header>
-  <main-menu></main-menu>
+  <div id = app>
+    <main-header></main-header>
+    <main-menu></main-menu>
+  </div>
 </template>
 
 <script>
@@ -13,5 +15,13 @@ export default {
 </script>
 
 <style scoped>
-
+#app{
+  width: 100%;
+  height: 100%;
+}
+body{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
 </style>
