@@ -35,7 +35,6 @@ export default {
     }
   },
 
-
   mounted() {
     this.getCars();
   },
@@ -68,7 +67,6 @@ export default {
     setSelectedCar(c){
       this.selectedCar = c;
       this.isDataLoaded = true;
-      this.$chartRef.rerender
     }
   }
 }

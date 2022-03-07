@@ -7,11 +7,12 @@ export const HistoryService = {
 
 async function getWeeklyStatistics(carId){
     let result = {week:[], kilometrage:[]};
-    result.week = getWeek();
+    result.week = getWeek().reverse();
     for (let i = 0; i < result.week.length; i++) {
         let km = await getDayKilometrage(result.week[i], carId).then(res=>{return res});
         result.kilometrage.push(km);
     }
+    result.week = getDDMMFormat(result.week);
     console.log("HISTORY SERVICE: " + result);
     console.log(result);
     return result;
@@ -24,6 +25,10 @@ function getWeek(){
         week.push(moment().subtract(i,"days").format("YYYY-MM-DD"));
     }
     return week;
+}
+
+function getDDMMFormat(week){
+    return week.map(day => moment(day).format("DD.MM"));
 }
 
 async function getDayKilometrage(date ,carId){

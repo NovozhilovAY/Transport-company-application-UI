@@ -17,7 +17,7 @@
       <legend>Водитель</legend>
     </fieldset>
     <div class="chart-container">
-      <CarChart v-if="isDataLoaded" class="chart" :weeklyStat="this.weeklyStat"></CarChart>
+      <CarChart v-if="isDataLoaded" class="chart" :options="chartOptions.options" :series="chartOptions.series"></CarChart>
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@
 <script>
 import {HistoryService} from "@/services/HistoryService";
 import CarChart from "@/pages/main/components/cars/CarChart";
+import {getChatrConfiguration} from "@/utils/ChatrUtil";
 export default {
   name: "CarInfo",
   components: {CarChart},
@@ -33,13 +34,19 @@ export default {
   },
 
   mounted() {
+    this.isDataLoaded = false;
     this.getWeeklyStat();
-
   },
+  watch:{
+    car(){
+      this.getWeeklyStat();
+    }
+  },
+
   data () {
     return {
       isDataLoaded: false,
-      weeklyStat: {}
+      chartOptions: {}
     }
   },
   methods:{
@@ -48,7 +55,9 @@ export default {
     },
     getWeeklyStat(){
       HistoryService.getWeeklyStatistics(this.car.id).then(res => {
-        this.weeklyStat = res;
+        this.chartOptions = getChatrConfiguration(res.kilometrage, res.week);
+        console.log(this.chartOptions.options);
+        console.log(this.chartOptions.series);
         this.isDataLoaded = true;
       });
     }
