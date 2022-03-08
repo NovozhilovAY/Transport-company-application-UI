@@ -4,7 +4,8 @@ import {getHeaders} from "@/utils/AuthHeader";
 
 export const CarService = {
     getAllCars,
-    getCarById
+    getCarById,
+    doMaintenance
 }
 
 async function getAllCars(){
@@ -28,5 +29,15 @@ async function getCarById(id){
         console.log(error.response);
         return {status: error.response.status};
     })
+    return result;
+}
+
+async function doMaintenance(id){
+    let result = await HTTP.patch("api/cars/maintenance/"+id,{} ,getHeaders())
+        .then(response => {
+            return response.data;
+        }).catch(error => {
+            console.log(error.response);
+        })
     return result;
 }
