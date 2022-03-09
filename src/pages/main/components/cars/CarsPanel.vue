@@ -12,7 +12,9 @@
           <td>{{c.licensePlate}}</td>
         </tr>
       </table>
+      <button @click="this.addCarModalOpen = true">+</button>
     </div>
+    <AddCarModal v-if="addCarModalOpen" @exit="closeAddCarModal" @saveCar="addCar"></AddCarModal>
     <div class="right-side">
       <CarInfo v-if="isDataLoaded" v-bind:car="this.cars[selectedIndex]"
                @doMaintenance="doMaintenance"
@@ -25,17 +27,19 @@
 <script>
 import {CarService} from "@/services/CarService";
 import CarInfo from "@/pages/main/components/cars/CarInfo";
+import AddCarModal from "@/pages/main/components/cars/modals/AddCarModal";
 
 export default {
   name: "CarsPanel",
-  components: {CarInfo},
+  components: {AddCarModal, CarInfo},
   data: function () {
     return {
       cars: [],
       selectedCar: null,
       selectedIndex: -1,
       updater: {},
-      isDataLoaded: false
+      isDataLoaded: false,
+      addCarModalOpen: false
     }
   },
 
@@ -103,6 +107,14 @@ export default {
     },
     handleUpdatedCar(updatedCar){
       this.cars[this.cars.map((car)=>car.id).indexOf(updatedCar.id)] = updatedCar;
+    },
+    closeAddCarModal(){
+      this.addCarModalOpen = false;
+    },
+    addCar(car){
+      console.log('addCar');
+      this.cars.push(car);
+      this.addCarModalOpen = false;
     }
 
   }

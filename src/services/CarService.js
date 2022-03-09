@@ -7,7 +7,8 @@ export const CarService = {
     getCarById,
     doMaintenance,
     deleteCarById,
-    updateCar
+    updateCar,
+    saveCar
 }
 
 async function getAllCars(){
@@ -55,8 +56,20 @@ async function deleteCarById(id){
 }
 
 async function updateCar(updatedCar){
-    console.log(updatedCar);
-    let result = await HTTP.put("/api/cars", updatedCar,getHeaders())
+    let result = await HTTP.put("/api/cars", updatedCar, getHeaders())
+        .then(response => {
+                console.log(response);
+                return response;
+            }
+        ).catch(error=>{
+            console.log(error.response);
+            return error.response;
+        });
+    return result;
+}
+
+async function saveCar(savedCar){
+    let result = await HTTP.post("/api/cars", savedCar, getHeaders())
         .then(response => {
                 console.log(response);
                 return response;
