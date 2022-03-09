@@ -64,12 +64,14 @@ export default {
 }
 
 #main {
-  box-sizing: border-box;
   position: fixed;
-  margin-left: 160px;
-  padding: 0;
-  width: 100%;
+  top:0;
+  left: 0;
   height: 100%;
+  width: 100%;
+  padding-top:60px;
+  box-sizing: border-box;
+  padding-left: 160px;
 }
 
 </style>

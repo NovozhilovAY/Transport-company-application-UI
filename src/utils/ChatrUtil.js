@@ -11,7 +11,24 @@ export function getChatrConfiguration(x, y){
         },
         xaxis: {
             categories: y,
+            title:{
+                text: "Дата",
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 200
+                },
+            }
+
         },
+        yaxis:{
+            title:{
+                text: "Пробег, км",
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 200
+                },
+            }
+        }
     };
     config.series = [
         {

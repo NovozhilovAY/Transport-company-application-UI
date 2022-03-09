@@ -107,6 +107,7 @@ export default {
   box-sizing: border-box;
   padding: .5rem .75rem;
   font-size: 1.25rem;
+  color: white;
   background-color: red;
   border: 1px solid rgba(0,0,0,.15);
   border-radius: .25rem;

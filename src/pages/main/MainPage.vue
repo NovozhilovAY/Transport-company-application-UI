@@ -1,6 +1,6 @@
 <template>
-  <div id = app>
-    <main-header></main-header>
+  <div id="app" class="main-container">
+    <main-header class="main-header"></main-header>
     <main-menu></main-menu>
   </div>
 </template>
@@ -16,12 +16,24 @@ export default {
 
 <style scoped>
 #app{
+  position: relative;
   width: 100%;
   height: 100%;
+}
+.main-container{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
 }
 body{
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+}
+.main-header{
+  position: fixed;
+  z-index: 10;
+  width: 100%;
 }
 </style>

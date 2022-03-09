@@ -3,9 +3,9 @@
     <div class="left-side">
       <table class="cars-table">
         <tr class="table-header"><th>id</th><th>Марка</th><th>Модель</th><th>Номер</th></tr>
-        <tr class="row" v-for="c in cars" :key="c.id"
+        <tr class="row" v-for="(c, index) in cars" :key="index"
             v-bind:class="{warning: isWarning(c), danger:isDanger(c)}"
-            @click="setSelectedCar(c)">
+            @click="selectedIndex = index">
           <td>{{c.id}}</td>
           <td>{{c.brand}}</td>
           <td>{{c.model}}</td>
@@ -14,7 +14,10 @@
       </table>
     </div>
     <div class="right-side">
-      <CarInfo v-if="isDataLoaded" v-bind:car="selectedCar"></CarInfo>
+      <CarInfo v-if="isDataLoaded" v-bind:car="this.cars[selectedIndex]"
+               @doMaintenance="doMaintenance"
+               @deleteCar="deleteCarById"
+               @update="handleUpdatedCar"></CarInfo>
     </div>
   </div>
 </template>
@@ -29,7 +32,8 @@ export default {
   data: function () {
     return {
       cars: [],
-      selectedCar: {},
+      selectedCar: null,
+      selectedIndex: -1,
       updater: {},
       isDataLoaded: false
     }
@@ -37,6 +41,7 @@ export default {
 
   mounted() {
     this.getCars();
+    this.updater = this.updateData();
   },
 
   unmounted() {
@@ -45,12 +50,17 @@ export default {
 
   methods:{
     updateData(){
-      return setInterval((this.getCars), 10000);
+      return setInterval((this.getCars), 3000);
     },
     getCars(){
       CarService.getAllCars().then(result => {
         if(result.status === 200){
-          this.cars = result.cars;
+          this.cars = result.cars.sort((a, b)=>a.id - b.id);
+          console.log(result.cars);
+          if(this.cars.length !== 0 && this.selectedIndex === -1){
+            this.selectedIndex = 0;
+            this.isDataLoaded = true;
+          }
         }
       })
     },
@@ -60,14 +70,41 @@ export default {
       }
     },
     isDanger(car){
-      if(car.kmBeforeMaint < 0){
+      if(car.kmBeforeMaint <= 0){
         return true;
       }
     },
     setSelectedCar(c){
       this.selectedCar = c;
       this.isDataLoaded = true;
+    },
+    doMaintenance(car){
+      let index;
+      for (let i = 0; i< this.cars.length;i++){
+        if(this.cars[i].id === car.id){
+          index = i;
+        }
+      }
+      CarService.doMaintenance(car.id).then(result =>{
+            this.cars[index] = result;
+            this.selectedCar = result;
+        }
+      );
+    },
+    deleteCarById(car){
+      CarService.deleteCarById(car.id).then(
+          ()=>{
+            if(this.cars.indexOf(car) === this.selectedIndex){
+              this.selectedIndex = 0;
+            }
+            this.cars.splice(this.cars.indexOf(car));
+          }
+      )
+    },
+    handleUpdatedCar(updatedCar){
+      this.cars[this.cars.map((car)=>car.id).indexOf(updatedCar.id)] = updatedCar;
     }
+
   }
 }
 </script>
@@ -92,6 +129,11 @@ export default {
   border-right-width: 1px;
   border-right-style: solid;
   border-color: gray;
+  overflow: auto;
+}
+
+.left-side::-webkit-scrollbar{
+  width: 0;
 }
 
 .right-side{
@@ -99,8 +141,12 @@ export default {
   display: block;
   box-sizing: border-box;
   padding: 10px;
-  width: 60%;
+  width: 70%;
+  overflow: auto;
+}
 
+.right-side::-webkit-scrollbar{
+  width: 0;
 }
 
 .cars-table{

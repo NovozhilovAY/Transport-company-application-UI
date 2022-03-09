@@ -13,8 +13,7 @@ async function getWeeklyStatistics(carId){
         result.kilometrage.push(km);
     }
     result.week = getDDMMFormat(result.week);
-    console.log("HISTORY SERVICE: " + result);
-    console.log(result);
+    result.kilometrage = result.kilometrage.map(km => Math.floor(km));
     return result;
 }
 

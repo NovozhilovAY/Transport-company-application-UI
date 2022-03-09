@@ -5,7 +5,9 @@ import {getHeaders} from "@/utils/AuthHeader";
 export const CarService = {
     getAllCars,
     getCarById,
-    doMaintenance
+    doMaintenance,
+    deleteCarById,
+    updateCar
 }
 
 async function getAllCars(){
@@ -39,5 +41,29 @@ async function doMaintenance(id){
         }).catch(error => {
             console.log(error.response);
         })
+    return result;
+}
+
+async function deleteCarById(id){
+    let result = await HTTP.delete("api/cars/"+id, getHeaders())
+        .then(response =>{
+            return response.status;
+        }).catch(error=>{
+            console.log(error.response);
+        });
+    return result;
+}
+
+async function updateCar(updatedCar){
+    console.log(updatedCar);
+    let result = await HTTP.put("/api/cars", updatedCar,getHeaders())
+        .then(response => {
+                console.log(response);
+                return response;
+            }
+        ).catch(error=>{
+            console.log(error.response);
+            return error.response;
+        });
     return result;
 }
