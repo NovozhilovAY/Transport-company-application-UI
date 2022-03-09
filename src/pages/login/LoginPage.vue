@@ -2,6 +2,7 @@
     <div class="container">
       <form class="form-signin" method="post"  @submit="login">
         <h2 class="form-signin-heading">Please sign in</h2>
+        <p v-if="invalidCredentials" class="err-field">{{this.errorMessage}}</p>
         <p>
           <input v-model="username" type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
         </p>
@@ -25,7 +26,8 @@ export default {
     return {
       username: "",
       password: "",
-      invalidCredentials: false
+      invalidCredentials: false,
+      errorMessage:""
     }
   },
   methods:{
@@ -37,6 +39,8 @@ export default {
         console.log(response.status);
         this.$router.push({path: '/', replace: true});
       } else {
+        console.log(response);
+        this.errorMessage = response.data.message;
         this.invalidCredentials = true;
       }
     }
@@ -96,6 +100,16 @@ export default {
 
 .btn-submit:hover{
   background-color: rgb(54,150,89);
+}
+
+.err-field{
+  width: 100%;
+  box-sizing: border-box;
+  padding: .5rem .75rem;
+  font-size: 1.25rem;
+  background-color: red;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
 }
 
 </style>
