@@ -14,7 +14,7 @@
         <p>Частота ТО: {{car.maintenanceFreq}} км.</p>
         <p>Следующее ТО через: {{car.kmBeforeMaint}} км.</p>
         <p>
-          <button @click="maintenanceDialogOpen = true">Провести ТО</button>
+          <button class="edit-btn" @click="maintenanceDialogOpen = true">Провести ТО</button>
         </p>
       </fieldset>
       <fieldset class="block-item">
@@ -40,10 +40,10 @@
     </fieldset>
     <div class="info-block">
 
-      <fieldset class="block-item">
+      <fieldset class="control-fieldset">
         <legend>Управление</legend>
-        <button @click="updateCarModalOpen = true">Редактировать</button>
-        <button @click="deleteDialogOpen = true">Удалить</button>
+            <button class="edit-btn" @click="updateCarModalOpen = true">Редактировать</button>
+            <button class="delete-btn" @click="deleteDialogOpen = true">Удалить</button>
       </fieldset>
     </div>
 
@@ -166,4 +166,39 @@ export default {
   border-width: 1px;
   border-radius: 10px;
 }
+
+.edit-btn{
+  padding: 7px;
+  color: white;
+  background: #4AAE9B;
+  border: 1px solid #4AAE9B;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+.delete-btn{
+  padding: 7px;
+  color: white;
+  background: #ff1414;
+  border: 1px solid #ff1414;
+  border-radius: 3px;
+  margin-left:20px;
+  font-size: 16px;
+}
+
+.edit-btn:hover{
+  border-color: black;
+}
+
+.delete-btn:hover{
+  border-color: black;
+}
+
+.control-fieldset{
+  margin: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+}
+
 </style>

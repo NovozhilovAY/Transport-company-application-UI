@@ -88,4 +88,8 @@ export default {
   height: 50%;
   margin: 5px;
 }
+
+.btn-green:hover {
+  border-color: black;
+}
 </style>

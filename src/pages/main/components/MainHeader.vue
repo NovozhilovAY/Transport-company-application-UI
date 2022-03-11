@@ -53,15 +53,14 @@ export default {
 }
 
 .exit-btn{
-  color: white;
-  background: #4AAE9B;
-  border: 1px solid #4AAE9B;
+  background: #ffffff;
+  border: 1px solid #000000;
   border-radius: 3px;
   font-size: 20px;
 }
 
 .exit-btn:hover{
-  border-color: black;
+  background-color: #e0e0e0;
 }
 
 .login-label{

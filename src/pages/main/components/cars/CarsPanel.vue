@@ -12,7 +12,7 @@
           <td>{{c.licensePlate}}</td>
         </tr>
       </table>
-      <button @click="this.addCarModalOpen = true">+</button>
+      <button class="add-btn" @click="this.addCarModalOpen = true">+</button>
     </div>
     <AddCarModal v-if="addCarModalOpen" @exit="closeAddCarModal" @saveCar="addCar"></AddCarModal>
     <div class="right-side">
@@ -210,4 +210,21 @@ table.cars-table tr.warning:hover td{
   background-color: #ffff2c;
 }
 
+.add-btn{
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 35px;
+  margin-top: 10px;
+  margin-left: 10px;
+  display:block;
+  float:none;
+  color: white;
+  background: #4AAE9B;
+  border: 1px solid #4AAE9B;
+  border-radius: 25px;
+}
+
+.add-btn:hover{
+  border-color: black;
+}
 </style>

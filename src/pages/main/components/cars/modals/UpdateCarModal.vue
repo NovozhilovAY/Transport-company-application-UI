@@ -21,29 +21,32 @@
           <input class="input-field" type="text" v-model="updatedCar.licensePlate">
         </p>
         <p>Год выпуска:
-          <input class="input-field" type="text" v-model="updatedCar.year">
+          <input class="input-field" type="number" v-model="updatedCar.year">
         </p>
       </fieldset>
       <fieldset class="block-item">
         <legend>Пробег и ТО</legend>
         <p>Пробег, км:
-          <input class="input-field" type="text" v-model="updatedCar.kilometrage">
+          <input class="input-field" type="number" v-model="updatedCar.kilometrage">
         </p>
         <p>Частота ТО, км:
-          <input class="input-field" type="text" v-model="updatedCar.maintenanceFreq">
+          <input class="input-field" type="number" v-model="updatedCar.maintenanceFreq">
         </p>
         <p>Следующее ТО через, км:
-          <input class="input-field" type="text" v-model="updatedCar.kmBeforeMaint">
+          <input class="input-field" type="number" v-model="updatedCar.kmBeforeMaint">
         </p>
 
       </fieldset>
       <fieldset class="block-item">
         <legend>Водитель</legend>
-        <div v-if="car.driver">
-          <p>Фамилия: {{car.driver.lastName}}</p>
-          <p>Имя: {{car.driver.firstName}}</p>
-          <p>Отчество: {{car.driver.middleName}}</p>
-          <p>Номер ВУ: {{car.driver.drivingLicense}}</p>
+        <select class="driver-selector" v-model="this.updatedCar.driver">
+          <option v-for="driver in optionsData" v-bind:value="driver.value" v-bind:key="driver.value">{{driver.text}}</option>
+        </select>
+        <div v-if="this.updatedCar.driver">
+          <p>Фамилия: {{updatedCar.driver.lastName}}</p>
+          <p>Имя: {{updatedCar.driver.firstName}}</p>
+          <p>Отчество: {{updatedCar.driver.middleName}}</p>
+          <p>Номер ВУ: {{updatedCar.driver.drivingLicense}}</p>
         </div>
         <div v-else>
           <p>Водитель не назначен</p>
@@ -54,11 +57,11 @@
       <legend>Местоположение</legend>
       <p class="horizontal-p">
         Широта:
-        <input class="input-field" type="text" v-model="updatedCar.latitude">
+        <input class="input-field" type="number" v-model="updatedCar.latitude">
       </p>
       <p class="horizontal-p">
         Долгота:
-        <input class="input-field" type="text" v-model="updatedCar.longitude">
+        <input class="input-field" type="number" v-model="updatedCar.longitude">
       </p>
     </fieldset>
     <div class="modal-footer">
@@ -70,6 +73,7 @@
 
 <script>
 import {CarService} from "@/services/CarService";
+import {DriverService} from "@/services/DriverService";
 
 export default {
   name: "UpdateCarModal",
@@ -80,10 +84,25 @@ export default {
     return{
       updatedCar: this.car,
       freeDrivers:[],
-      errors:[]
+      errors:[],
+      optionsData:[]
     }
   },
+  mounted() {
+    this.freeDrivers.push({});
+    if(this.updatedCar.driver){
+      this.freeDrivers.push(this.updatedCar.driver);
+    }
+    this.getFreeDrivers();
+  },
   methods:{
+    getFreeDrivers(){
+      DriverService.getFreeDrivers().then(result=>{
+        console.log(result.data);
+        this.freeDrivers = this.freeDrivers.concat(result.data);
+        this.setOptionsData();
+      })
+    },
     exit(){
       this.$emit("exit");
     },
@@ -97,6 +116,18 @@ export default {
         }
       });
 
+    },
+    setOptionsData(){
+      for(let i = 0;i < this.freeDrivers.length;i++){
+        if(this.freeDrivers[i].id){
+          this.optionsData.push({text: this.getFIO(this.freeDrivers[i]), value: this.freeDrivers[i]})
+        }else {
+          this.optionsData.push({text: "Не назначен", value: undefined});
+        }
+      }
+    },
+    getFIO(driver){
+      return driver.lastName + " " + driver.firstName[0] + "." + driver.middleName[0] + ".";
     }
   }
 }
@@ -204,5 +235,9 @@ export default {
 
 .err-record{
   color: red;
+}
+
+.driver-selector{
+  font-size: 16px;
 }
 </style>

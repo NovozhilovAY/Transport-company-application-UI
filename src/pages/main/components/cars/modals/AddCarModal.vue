@@ -21,24 +21,27 @@
             <input class="input-field" type="text" v-model="savedCar.licensePlate">
           </p>
           <p>Год выпуска:
-            <input class="input-field" type="text" v-model="savedCar.year">
+            <input class="input-field" type="number" v-model="savedCar.year">
           </p>
         </fieldset>
         <fieldset class="block-item">
           <legend>Пробег и ТО</legend>
           <p>Пробег, км:
-            <input class="input-field" type="text" v-model="savedCar.kilometrage">
+            <input class="input-field" type="number" v-model="savedCar.kilometrage">
           </p>
           <p>Частота ТО, км:
-            <input class="input-field" type="text" v-model="savedCar.maintenanceFreq">
+            <input class="input-field" type="number" v-model="savedCar.maintenanceFreq">
           </p>
           <p>Следующее ТО через, км:
-            <input class="input-field" type="text" v-model="savedCar.kmBeforeMaint">
+            <input class="input-field" type="number" v-model="savedCar.kmBeforeMaint">
           </p>
 
         </fieldset>
         <fieldset class="block-item">
           <legend>Водитель</legend>
+          <select class="driver-selector" v-model="this.savedCar.driver">
+            <option v-for="driver in optionsData" v-bind:value="driver.value" v-bind:key="driver.value">{{driver.text}}</option>
+          </select>
           <div v-if="savedCar.driver">
             <p>Фамилия: {{savedCar.driver.lastName}}</p>
             <p>Имя: {{savedCar.driver.firstName}}</p>
@@ -71,14 +74,21 @@
 <script>
 
 import {CarService} from "@/services/CarService";
+import {DriverService} from "@/services/DriverService";
 
 export default {
   name: "AddCarModal",
   data(){
     return{
       savedCar: {},
-      errors:[]
+      errors:[],
+      freeDrivers:[],
+      optionsData:[]
     }
+  },
+  mounted() {
+    this.freeDrivers.push({});
+    this.getFreeDrivers();
   },
   methods:{
     exit(){
@@ -94,6 +104,25 @@ export default {
           this.errors = result.data.errors;
         }
       });
+    },
+    getFreeDrivers(){
+      DriverService.getFreeDrivers().then(result=>{
+        console.log(result.data);
+        this.freeDrivers = this.freeDrivers.concat(result.data);
+        this.setOptionsData();
+      })
+    },
+    setOptionsData(){
+      for(let i = 0;i < this.freeDrivers.length;i++){
+        if(this.freeDrivers[i].id){
+          this.optionsData.push({text: this.getFIO(this.freeDrivers[i]), value: this.freeDrivers[i]})
+        }else {
+          this.optionsData.push({text: "Не назначен", value: undefined});
+        }
+      }
+    },
+    getFIO(driver){
+      return driver.lastName + " " + driver.firstName[0] + "." + driver.middleName[0] + ".";
     }
   }
 }
@@ -202,5 +231,9 @@ export default {
 
 .err-record{
   color: red;
+}
+
+.driver-selector{
+  font-size: 16px;
 }
 </style>
