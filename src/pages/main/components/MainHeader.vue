@@ -17,7 +17,7 @@ export default {
       username: ""
     }
   },
-  mounted: function () {
+  mounted() {
     this.username = this.getUsername();
   },
   methods:{
@@ -40,7 +40,6 @@ export default {
   width: auto;
   background-color: white;
   margin: 0px;
-  padding-top: 18px;
   box-sizing: border-box;
   border-bottom-style: solid;
   border-width: 1px;
@@ -50,31 +49,35 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size: 25px;
   font-weight: bolder;
-  margin-left: 5%;
-  margin-top: 0;
+  margin-left: 3%;
 }
 
 .exit-btn{
-  right: 10px;
-  width: auto;
-  height: auto;
+  color: white;
+  background: #4AAE9B;
+  border: 1px solid #4AAE9B;
+  border-radius: 3px;
+  font-size: 20px;
+}
+
+.exit-btn:hover{
+  border-color: black;
 }
 
 .login-label{
   font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size: 20px;
-  margin-top: 0;
-  width: auto;
-  height: auto;
 }
 
 .center, .right, .left {
+  display: flex;
+  align-items: center;
   height: 100%;
 }
 
 .center{
   width: 20%;
-  text-align: right;
+  justify-content: right;
 }
 
 .left{
@@ -83,7 +86,7 @@ export default {
 
 .right{
   width: 10%;
-  text-align: center;
+  justify-content: center;
 }
 
 </style>
