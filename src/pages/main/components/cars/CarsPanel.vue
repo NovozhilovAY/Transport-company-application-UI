@@ -101,7 +101,7 @@ export default {
             if(this.cars.indexOf(car) === this.selectedIndex){
               this.selectedIndex = 0;
             }
-            this.cars.splice(this.cars.indexOf(car));
+            this.cars.splice(this.cars.indexOf(car),1);
           }
       )
     },
@@ -162,7 +162,7 @@ export default {
 }
 
 .cars-table{
-  font-size: 20px;
+  font-size: 18px;
   width: 100%;
   text-align: center;
   border-collapse: collapse;

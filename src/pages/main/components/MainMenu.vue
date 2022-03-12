@@ -1,23 +1,26 @@
 <template>
   <div id="mySidenav" class="sidenav">
-    <button v-on:click="setMenuItem" id = 'map'>Карта</button>
-    <button v-on:click="setMenuItem" id = 'cars'>Автомобили</button>
-    <button v-on:click="setMenuItem" id = 'drivers'>Водители</button>
-    <button v-on:click="setMenuItem" id = 'users'>Пользователи</button>
+    <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'map'>Карта</button>
+    <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'cars'>Автомобили</button>
+    <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'drivers'>Водители</button>
+    <button v-if="this.hasRole(['ADMIN'])" v-on:click="setMenuItem" id = 'users'>Пользователи</button>
   </div>
 
   <div id="main">
-    <MainMap v-if="this.selectedItem === 'map'"></MainMap>
+    <MainMap v-if="this.hasRole(['ADMIN', 'DISPATCHER']) && this.selectedItem === 'map'"></MainMap>
     <CarsPanel v-if="this.selectedItem === 'cars'"></CarsPanel>
+
+    <UsersPanel v-if="this.selectedItem ==='users'"></UsersPanel>
   </div>
 </template>
 
 <script>
 import MainMap from "@/pages/main/components/map/MainMap";
 import CarsPanel from "@/pages/main/components/cars/CarsPanel";
+import UsersPanel from "@/pages/main/components/users/UsersPanel";
 export default {
   name: "MainMenu",
-  components: {CarsPanel, MainMap},
+  components: {UsersPanel, CarsPanel, MainMap},
   data(){
     return{
       selectedItem: "map"
@@ -27,6 +30,16 @@ export default {
   methods:{
     setMenuItem: function (event){
       this.selectedItem = event.target.id;
+    },
+    hasRole(rolesArr){
+      let roles = JSON.parse(localStorage.getItem('user')).roles;
+      console.log(roles);
+      for (let i=0; i<roles.length;i++){
+        if(rolesArr.indexOf(roles[i].replace("ROLE_", "")) !== -1){
+          return true;
+        }
+      }
+      return false;
     }
   }
 }
