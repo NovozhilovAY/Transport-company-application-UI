@@ -1,6 +1,7 @@
 export function getChatrConfiguration(x, y){
     let config = {options:{}, series:[]};
     config.options = {
+        colors:['#4AAE9B'],
         chart:{
             toolbar:{
                 show:false
@@ -36,6 +37,5 @@ export function getChatrConfiguration(x, y){
             data: x,
         }
     ];
-    console.log("getChart func");
     return config;
 }
