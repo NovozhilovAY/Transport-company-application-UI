@@ -6,9 +6,9 @@
         <td class="table-cell">{{user.id}}</td>
         <td class="table-cell">{{user.login}}</td>
         <td class="table-cell">{{this.getRoleNames(user)}}</td>
-        <td class="control-cell"><button class="control-btn"
+        <td class="control-cell"><button class="control-btn update-btn"
             @click="this.updateDialogOpen = true; userToUpdate = user;">&#9998;</button></td>
-        <td class="control-cell"><button class="control-btn" v-if="!isMyAccount(user.login)"
+        <td class="control-cell"><button class="control-btn delete-btn" v-if="!isMyAccount(user.login)"
           @click="this.deleteDialogOpen = true; userToDelete = user;">&#10007;</button></td>
       </tr>
     </table>
@@ -155,6 +155,31 @@ th{
 }
 
 .add-btn:hover{
+  border-color: black;
+}
+
+.delete-btn{
+  font-size: 16px;
+  color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ff1414;
+  background-color: #ff1414;
+  border-radius: 3px;
+}
+
+
+.update-btn{
+  font-size: 16px;
+  color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #4AAE9B;
+  background-color: #4AAE9B;
+  border-radius: 3px;
+}
+
+.update-btn:hover,.delete-btn:hover{
   border-color: black;
 }
 

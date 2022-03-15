@@ -9,7 +9,7 @@
   <div id="main">
     <MainMap v-if="this.hasRole(['ADMIN', 'DISPATCHER']) && this.selectedItem === 'map'"></MainMap>
     <CarsPanel v-if="this.selectedItem === 'cars'"></CarsPanel>
-
+    <DriversPanel v-if="this.selectedItem === 'drivers'"></DriversPanel>
     <UsersPanel v-if="this.selectedItem ==='users'"></UsersPanel>
   </div>
 </template>
@@ -18,9 +18,10 @@
 import MainMap from "@/pages/main/components/map/MainMap";
 import CarsPanel from "@/pages/main/components/cars/CarsPanel";
 import UsersPanel from "@/pages/main/components/users/UsersPanel";
+import DriversPanel from "@/pages/main/components/drivers/DriversPanel";
 export default {
   name: "MainMenu",
-  components: {UsersPanel, CarsPanel, MainMap},
+  components: {DriversPanel, UsersPanel, CarsPanel, MainMap},
   data(){
     return{
       selectedItem: "map"

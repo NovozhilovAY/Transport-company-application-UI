@@ -14,9 +14,13 @@
           <p>Логин:
             <input class="input-field" type="text" v-model="updatedUser.login">
           </p>
-          <p>Пароль:
-            <input class="input-field" type="password" v-model="updatedUser.password">
-          </p>
+          <div>
+            <input type="checkbox" v-model="updatePass"><label>Обновить пароль</label>
+            <p v-if="updatePass">Пароль:
+              <input class="input-field" type="password" v-model="updatedUser.password">
+            </p>
+          </div>
+
         </fieldset>
         <fieldset class="block-item">
           <legend>Роли</legend>
@@ -47,7 +51,17 @@ export default {
       updatedUser: JSON.parse(JSON.stringify(this.user)),
       errors:[],
       roles:[],
-      rolesCheckBoxItems:[]
+      rolesCheckBoxItems:[],
+      updatePass: false
+    }
+  },
+  watch:{
+    updatePass(newValue, oldValue){
+      if(oldValue === true && newValue === false){
+        delete this.updatedUser['password'];
+      }else {
+        this.updatedUser.password = "";
+      }
     }
   },
   mounted() {
@@ -58,7 +72,8 @@ export default {
       this.$emit('exit');
     },
     update(){
-      UserService.updateUser(this.updatedUser).then(result => {
+      console.log(this.updatedUser);
+      UserService.partialUpdate(this.updatedUser).then(result => {
         console.log(result.status);
         if(result.status===200){
           this.$emit('update', result.data);

@@ -5,7 +5,8 @@ export const UserService = {
     getAllUsers,
     deleteById,
     updateUser,
-    saveUser
+    saveUser,
+    partialUpdate
 }
 
 async function getAllUsers(){
@@ -46,4 +47,12 @@ async function saveUser(user){
             console.log(error.response);
             return error.response;
         });
+}
+
+async function partialUpdate(user){
+    return await HTTP.patch('/api/users/'+ user.id, user, getHeaders()).then(response=>{
+        return response;
+    }).catch(error =>{
+        return error.response;
+    })
 }
