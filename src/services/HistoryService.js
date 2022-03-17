@@ -1,6 +1,7 @@
 import HTTP from "@/utils/HTTP";
 import {getHeaders} from "@/utils/AuthHeader";
 import moment from 'moment'
+import qs from "qs";
 export const HistoryService = {
     getWeeklyStatistics
 }
@@ -8,10 +9,13 @@ export const HistoryService = {
 async function getWeeklyStatistics(carId){
     let result = {week:[], kilometrage:[]};
     result.week = getWeek().reverse();
-    for (let i = 0; i < result.week.length; i++) {
-        let km = await getDayKilometrage(result.week[i], carId).then(res=>{return res});
-        result.kilometrage.push(km);
+    let config = getHeaders();
+    config.params = {id: carId, dates: result.week};
+    config.paramsSerializer = p => {
+        return qs.stringify(p, {arrayFormat: "repeat"})
     }
+    result.kilometrage = await HTTP.get("/api/history/date", config).then(result=>{return result.data});
+    console.log(result.kilometrage);
     result.week = getDDMMFormat(result.week);
     result.kilometrage = result.kilometrage.map(km => Math.floor(km));
     return result;
@@ -30,12 +34,3 @@ function getDDMMFormat(week){
     return week.map(day => moment(day).format("DD.MM"));
 }
 
-async function getDayKilometrage(date ,carId){
-    let config = getHeaders();
-    config.params = {carId:carId, date: date};
-    let kilometrage = await HTTP.get("/api/history/date",config).then(
-        (res)=>{
-            return res.data;
-        });
-    return kilometrage;
-}
