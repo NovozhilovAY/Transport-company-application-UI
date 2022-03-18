@@ -3,7 +3,9 @@ import {getHeaders} from "@/utils/AuthHeader";
 import moment from 'moment'
 import qs from "qs";
 export const HistoryService = {
-    getWeeklyStatistics
+    getWeeklyStatistics,
+    getMonthlyStatistics,
+    getYearStatistics
 }
 
 async function getWeeklyStatistics(carId){
@@ -21,6 +23,21 @@ async function getWeeklyStatistics(carId){
     return result;
 }
 
+async function getMonthlyStatistics(carId){
+    let result = {month:[], kilometrage:[]};
+    result.month = getMonth().reverse();
+    let config = getHeaders();
+    config.params = {id: carId, dates: result.month};
+    config.paramsSerializer = p => {
+        return qs.stringify(p, {arrayFormat: "repeat"})
+    }
+    result.kilometrage = await HTTP.get("/api/history/date", config).then(result=>{return result.data});
+    console.log(result.kilometrage);
+    result.month = getDDMMFormat(result.month);
+    result.kilometrage = result.kilometrage.map(km => Math.floor(km));
+    return result;
+}
+
 
 function getWeek(){
     let week = [];
@@ -30,7 +47,47 @@ function getWeek(){
     return week;
 }
 
+async function getYearStatistics(carId){
+    let result = {year:[], kilometrage:[]};
+    let dateIntervals = getDatesIntervals().reverse();
+    result.kilometrage = await HTTP.post("/api/history/date-interval", {id: carId, dateIntervals: dateIntervals}, getHeaders()).then(result=>{return result.data});
+    console.log(result.kilometrage);
+    result.year = getMonthsFromIntervals(dateIntervals);
+    result.kilometrage = result.kilometrage.map(km => Math.floor(km));
+    return result;
+}
+
+function getMonth(){
+    let month = [];
+    for (let i = 1; i <= 30; i++) {
+        month.push(moment().subtract(i,"days").format("YYYY-MM-DD"));
+    }
+    return month;
+}
+
 function getDDMMFormat(week){
     return week.map(day => moment(day).format("DD.MM"));
+}
+
+
+
+function getMonthsFromIntervals(datesIntervals){
+    let months = [];
+    for (let i = 0; i < datesIntervals.length; i++){
+        console.log(datesIntervals[i].from);
+        months.push(moment(datesIntervals[i].from).locale("ru").format("MMM"));
+    }
+    return months;
+}
+
+function getDatesIntervals(){
+    let datesIntervals = [];
+    for (let i =0; i<12; i++){
+        let dateInterval={from:{}, to:{}}
+        dateInterval.from = moment().subtract(i,'month').startOf("month").format("YYYY-MM-DD");
+        dateInterval.to = moment().subtract(i,'month').endOf("month").format("YYYY-MM-DD");
+        datesIntervals.push(dateInterval);
+    }
+    return datesIntervals;
 }
 

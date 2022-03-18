@@ -32,7 +32,11 @@
     </div>
     <fieldset class="chart-fieldset">
       <legend>
-        Пробег за неделю
+        <select class="period-selector" v-model="statisticsPeriod">
+          <option value="week">Пробег за неделю</option>
+          <option value="month">Пробег за месяц</option>
+          <option value="year">Пробег за год</option>
+        </select>
       </legend>
       <div class="chart-container">
         <CarChart v-if="isDataLoaded" class="chart" :options="chartOptions.options" :series="chartOptions.series"></CarChart>
@@ -77,7 +81,10 @@ export default {
   },
   watch:{
     car(){
-      this.getWeeklyStat();
+      this.getStatistics();
+    },
+    statisticsPeriod(){
+      this.getStatistics();
     }
   },
 
@@ -87,7 +94,8 @@ export default {
       chartOptions: {},
       deleteDialogOpen: false,
       maintenanceDialogOpen: false,
-      updateCarModalOpen:false
+      updateCarModalOpen:false,
+      statisticsPeriod: "week"
     }
   },
   methods:{
@@ -98,6 +106,16 @@ export default {
         console.log(this.chartOptions.series);
         this.isDataLoaded = true;
       });
+    },
+    getMonthlyStat(){
+      HistoryService.getMonthlyStatistics(this.car.id).then(res => {
+        this.chartOptions = getChatrConfiguration(res.kilometrage, res.month);
+      })
+    },
+    getYearStat(){
+      HistoryService.getYearStatistics(this.car.id).then(res => {
+        this.chartOptions = getChatrConfiguration(res.kilometrage, res.year);
+      })
     },
     doMaintenance(){
       this.$emit('doMaintenance', this.car);
@@ -125,6 +143,19 @@ export default {
     updateCarModalSuccess(updatedCar){
       this.updateCarModalOpen = false;
       this.$emit('update', updatedCar);
+    },
+    getStatistics(){
+      switch (this.statisticsPeriod){
+        case "week":
+          this.getWeeklyStat();
+          break;
+        case "month":
+          this.getMonthlyStat();
+          break;
+        case "year":
+          this.getYearStat();
+          break;
+      }
     }
   }
 }
@@ -199,6 +230,11 @@ export default {
   border-style: solid;
   border-width: 1px;
   border-radius: 10px;
+}
+
+.period-selector{
+  border-style: none;
+  font-size: inherit;
 }
 
 </style>
