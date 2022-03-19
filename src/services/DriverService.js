@@ -6,7 +6,16 @@ export const DriverService = {
     getAllDrivers,
     deleteById,
     update,
-    save
+    save,
+    partialUpdate
+}
+
+async function partialUpdate(carId, updatedFields){
+    return await HTTP.patch('api/drivers/'+carId, updatedFields, getHeaders()).then(response=>{
+        return response;
+    }).catch(error=>{
+        return error.response;
+    });
 }
 
 async function getFreeDrivers(){

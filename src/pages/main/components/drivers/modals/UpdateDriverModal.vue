@@ -12,16 +12,16 @@
         <fieldset class="block-item">
           <legend>Основная информация</legend>
           <p>Фамилия:
-            <input class="input-field" type="text" v-model="driver.lastName">
+            <input name="lastName" class="input-field" type="text" v-model="driver.lastName" v-on:change="changeValue">
           </p>
           <p>Имя:
-            <input class="input-field" type="text" v-model="driver.firstName">
+            <input name="firstName" class="input-field" type="text" v-model="driver.firstName" v-on:change="changeValue">
           </p>
           <p>Отчество:
-            <input class="input-field" type="text" v-model="driver.middleName">
+            <input name="middleName" class="input-field" type="text" v-model="driver.middleName" v-on:change="changeValue">
           </p>
           <p>Номер ВУ:
-            <input class="input-field" type="text" v-model="driver.drivingLicense">
+            <input name="drivingLicense" class="input-field" type="text" v-model="driver.drivingLicense" v-on:change="changeValue">
           </p>
         </fieldset>
       </div>
@@ -42,6 +42,7 @@ export default {
     return{
       driver: JSON.parse(JSON.stringify(this.driverToUpdate)),
       errors: [],
+      fieldsToUpdate: {}
     }
   },
   methods:{
@@ -49,13 +50,17 @@ export default {
       this.$emit('exit');
     },
     update(){
-      DriverService.update(this.driver).then(response=>{
+      DriverService.partialUpdate(this.driver.id, this.fieldsToUpdate).then(response=>{
         if(response.status===200){
           this.$emit('update', response.data);
         }else {
           this.errors = response.data.errors;
         }
       });
+    },
+    changeValue(event){
+      this.fieldsToUpdate[event.target.name] = event.target.value;
+      console.log(this.fieldsToUpdate);
     }
   }
 }
