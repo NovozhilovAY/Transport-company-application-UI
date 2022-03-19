@@ -1,5 +1,9 @@
 <template>
   <div class="table-container">
+    <div class="error-div" v-for="error in errors" :key="error">
+      <div class="l-side"><p class="error-msg">Error: {{error.message}}</p></div>
+      <div class="r-side"><button v-on:click="deleteError(error)" class="delete-error-btn delete-btn">&#10007;</button></div>
+    </div>
     <table class="users-table">
       <tr class="table-header"><th>id</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Номер ВУ</th></tr>
       <tr class="row" v-for="driver in drivers" :key="driver.id">
@@ -38,6 +42,7 @@ export default {
   components: {SaveDriverModal, UpdateDriverModal, ConfirmDialog},
   data(){
     return{
+      errors:[],
       drivers:[],
       driverToDelete: {},
       driverToUpdate:{},
@@ -63,8 +68,13 @@ export default {
       this.deleteDialogOpen = false;
     },
     deleteDriver(driver){
-      DriverService.deleteById(driver.id).then(()=>{
-        this.drivers.splice(this.drivers.indexOf(driver),1);
+      DriverService.deleteById(driver.id).then((response)=>{
+        if(response.status !== 204){
+          this.errors = response.data.errors;
+          console.log(response.data.errors);
+        }else {
+          this.drivers.splice(this.drivers.indexOf(driver),1);
+        }
       });
     },
     updateModalExit(){
@@ -80,6 +90,9 @@ export default {
     saveModalSave(savedDriver){
       this.saveDialogOpen = false;
       this.drivers.push(savedDriver);
+    },
+    deleteError(error){
+      this.errors.splice(this.errors.indexOf(error), 1);
     }
 
   }
@@ -173,6 +186,41 @@ th{
 
 .update-btn:hover,.delete-btn:hover{
   border-color: black;
+}
+
+.error-div{
+  display: flex;
+  margin-top: 10px;
+  color: #ff1414;
+  border-style: solid;
+  border-color: #ff1414;
+  border-radius: 20px;
+  border-width: 3px;
+}
+
+.delete-error-btn{
+
+  margin-right: 10px;
+  height: 50%;
+  margin-top: auto;
+  margin-bottom: auto;
+
+}
+
+.l-side{
+  width: 80%;
+}
+
+.r-side{
+  width: 20%;
+  display: flex;
+  justify-content: right;
+  vertical-align: center;
+}
+.error-msg{
+  font-weight: bold;
+  padding: 5px;
+  margin: 10px;
 }
 
 </style>
