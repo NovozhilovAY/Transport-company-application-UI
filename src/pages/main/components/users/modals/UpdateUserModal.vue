@@ -12,12 +12,12 @@
         <fieldset class="block-item">
           <legend>Основная информация</legend>
           <p>Логин:
-            <input class="input-field" type="text" v-model="updatedUser.login">
+            <input name="login" class="input-field" type="text" v-model="updatedUser.login" v-on:change="changeValue">
           </p>
           <div>
             <input type="checkbox" v-model="updatePass"><label>Обновить пароль</label>
             <p v-if="updatePass">Пароль:
-              <input class="input-field" type="password" v-model="updatedUser.password">
+              <input name="password" class="input-field" type="password" v-model="updatedUser.password" v-on:change="changeValue">
             </p>
           </div>
 
@@ -25,7 +25,7 @@
         <fieldset class="block-item">
           <legend>Роли</legend>
           <div class="role" v-for="roleItem in rolesCheckBoxItems" :key="roleItem.text">
-            <input type="checkbox" :value="roleItem.value" v-model="updatedUser.roles">
+            <input name="roles" type="checkbox" :value="roleItem.value" v-model="updatedUser.roles" v-on:change="changeValue">
             <label>{{roleItem.text}}</label>
           </div>
         </fieldset>
@@ -52,7 +52,8 @@ export default {
       errors:[],
       roles:[],
       rolesCheckBoxItems:[],
-      updatePass: false
+      updatePass: false,
+      fieldsToUpdate:{}
     }
   },
   watch:{
@@ -73,7 +74,7 @@ export default {
     },
     update(){
       console.log(this.updatedUser);
-      UserService.partialUpdate(this.updatedUser).then(result => {
+      UserService.partialUpdate(this.updatedUser.id, this.fieldsToUpdate).then(result => {
         console.log(result.status);
         if(result.status===200){
           this.$emit('update', result.data);
@@ -81,6 +82,14 @@ export default {
           this.errors = result.data.errors;
         }
       });
+    },
+    changeValue(event){
+      if(event.target.name === "roles"){
+        this.fieldsToUpdate["roles"] = this.updatedUser.roles;
+      }else {
+        this.fieldsToUpdate[event.target.name] = event.target.value;
+      }
+      console.log(this.fieldsToUpdate);
     },
     getRoles(){
       RoleService.getAllRoles().then(result=>{

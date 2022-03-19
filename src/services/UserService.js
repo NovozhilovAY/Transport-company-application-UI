@@ -49,8 +49,8 @@ async function saveUser(user){
         });
 }
 
-async function partialUpdate(user){
-    return await HTTP.patch('/api/users/'+ user.id, user, getHeaders()).then(response=>{
+async function partialUpdate(userId, fieldsToUpdate){
+    return await HTTP.patch('/api/users/'+ userId, fieldsToUpdate, getHeaders()).then(response=>{
         return response;
     }).catch(error =>{
         return error.response;
