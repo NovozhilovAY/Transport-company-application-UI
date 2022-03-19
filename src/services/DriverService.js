@@ -27,9 +27,9 @@ async function getAllDrivers(){
 
 async function deleteById(id){
     return await HTTP.delete('api/drivers/'+id,getHeaders()).then(response=>{
-        return response.status;
+        return response;
     }).catch(error=>{
-        console.log(error.response);
+        return error.response;
     });
 }
 

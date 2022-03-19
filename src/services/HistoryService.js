@@ -1,7 +1,7 @@
 import HTTP from "@/utils/HTTP";
 import {getHeaders} from "@/utils/AuthHeader";
 import moment from 'moment'
-import qs from "qs";
+
 export const HistoryService = {
     getWeeklyStatistics,
     getMonthlyStatistics,
@@ -11,12 +11,7 @@ export const HistoryService = {
 async function getWeeklyStatistics(carId){
     let result = {week:[], kilometrage:[]};
     result.week = getWeek().reverse();
-    let config = getHeaders();
-    config.params = {id: carId, dates: result.week};
-    config.paramsSerializer = p => {
-        return qs.stringify(p, {arrayFormat: "repeat"})
-    }
-    result.kilometrage = await HTTP.get("/api/history/date", config).then(result=>{return result.data});
+    result.kilometrage = await HTTP.post("/api/history/date",{id: carId, dates: result.week} ,getHeaders()).then(result=>{return result.data});
     console.log(result.kilometrage);
     result.week = getDDMMFormat(result.week);
     result.kilometrage = result.kilometrage.map(km => Math.floor(km));
@@ -26,12 +21,7 @@ async function getWeeklyStatistics(carId){
 async function getMonthlyStatistics(carId){
     let result = {month:[], kilometrage:[]};
     result.month = getMonth().reverse();
-    let config = getHeaders();
-    config.params = {id: carId, dates: result.month};
-    config.paramsSerializer = p => {
-        return qs.stringify(p, {arrayFormat: "repeat"})
-    }
-    result.kilometrage = await HTTP.get("/api/history/date", config).then(result=>{return result.data});
+    result.kilometrage = await HTTP.post("/api/history/date", {id: carId, dates: result.month}, getHeaders()).then(result=>{return result.data});
     console.log(result.kilometrage);
     result.month = getDDMMFormat(result.month);
     result.kilometrage = result.kilometrage.map(km => Math.floor(km));
