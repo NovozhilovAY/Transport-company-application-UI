@@ -12,34 +12,34 @@
       <fieldset class="block-item">
         <legend>Основная информация</legend>
         <p>Марка:
-          <input class="input-field" type="text" v-model="updatedCar.brand">
+          <input name="brand" class="input-field" type="text" v-model="updatedCar.brand" v-on:change="changeValue">
         </p>
         <p>Модель:
-          <input class="input-field" type="text" v-model="updatedCar.model">
+          <input name="model" class="input-field" type="text" v-model="updatedCar.model" v-on:change="changeValue">
         </p>
         <p>Номер:
-          <input class="input-field" type="text" v-model="updatedCar.licensePlate">
+          <input name="licensePlate" class="input-field" type="text" v-model="updatedCar.licensePlate" v-on:change="changeValue">
         </p>
         <p>Год выпуска:
-          <input class="input-field" type="number" v-model="updatedCar.year">
+          <input name="year" class="input-field" type="number" v-model="updatedCar.year" v-on:change="changeValue">
         </p>
       </fieldset>
       <fieldset class="block-item">
         <legend>Пробег и ТО</legend>
         <p>Пробег, км:
-          <input class="input-field" type="number" v-model="updatedCar.kilometrage">
+          <input name="kilometrage" class="input-field" type="number" v-model="updatedCar.kilometrage" v-on:change="changeValue">
         </p>
         <p>Частота ТО, км:
-          <input class="input-field" type="number" v-model="updatedCar.maintenanceFreq">
+          <input name="maintenanceFreq" class="input-field" type="number" v-model="updatedCar.maintenanceFreq" v-on:change="changeValue">
         </p>
         <p>Следующее ТО через, км:
-          <input class="input-field" type="number" v-model="updatedCar.kmBeforeMaint">
+          <input name="kmBeforeMaint" class="input-field" type="number" v-model="updatedCar.kmBeforeMaint" v-on:change="changeValue">
         </p>
 
       </fieldset>
       <fieldset class="block-item">
         <legend>Водитель</legend>
-        <select class="driver-selector" v-model="this.updatedCar.driver">
+        <select class="driver-selector" v-model="this.updatedCar.driver" name="driver" v-on:change="changeValue">
           <option v-for="driver in optionsData" v-bind:value="driver.value" v-bind:key="driver.value">{{driver.text}}</option>
         </select>
         <div v-if="this.updatedCar.driver">
@@ -85,7 +85,8 @@ export default {
       updatedCar: this.car,
       freeDrivers:[],
       errors:[],
-      optionsData:[]
+      optionsData:[],
+      fieldsToUpdate:{}
     }
   },
   mounted() {
@@ -107,7 +108,7 @@ export default {
       this.$emit("exit");
     },
     update(){
-      CarService.updateCar(this.updatedCar).then(result => {
+      CarService.partialUpdate(this.updatedCar.id, this.fieldsToUpdate).then(result => {
         console.log(result.status);
         if(result.status===200){
           this.$emit('update', result.data);
@@ -115,14 +116,27 @@ export default {
           this.errors = result.data.errors;
         }
       });
+    },
+    changeValue(event){
+      if(event.target.name === "driver"){
+        this.fieldsToUpdate["driver"] = this.updatedCar.driver;
+      }else {
+        if(event.target.type === 'number'){
+          this.fieldsToUpdate[event.target.name] = parseFloat(event.target.value);
+        }else {
+          this.fieldsToUpdate[event.target.name] = event.target.value;
+        }
 
+      }
+      console.log();
+      console.log(this.fieldsToUpdate);
     },
     setOptionsData(){
       for(let i = 0;i < this.freeDrivers.length;i++){
         if(this.freeDrivers[i].id){
           this.optionsData.push({text: this.getFIO(this.freeDrivers[i]), value: this.freeDrivers[i]})
         }else {
-          this.optionsData.push({text: "Не назначен", value: undefined});
+          this.optionsData.push({text: "Не назначен", value: null});
         }
       }
     },

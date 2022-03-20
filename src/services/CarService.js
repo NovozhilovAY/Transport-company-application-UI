@@ -8,75 +8,79 @@ export const CarService = {
     doMaintenance,
     deleteCarById,
     updateCar,
-    saveCar
+    saveCar,
+    partialUpdate
 }
 
 async function getAllCars(){
-    let result = {};
-    result = await HTTP.get("/api/cars", getHeaders()).then(
+    return await HTTP.get("/api/cars", getHeaders()).then(
     (response)=>{
         return {status: response.status, cars: response.data};
     }).catch((error)=>{
         console.log(error.response);
         return {status: error.response.status};
-    })
-    return result;
+    });
 }
 
 async function getCarById(id){
-    let result = {};
-    result = await HTTP.get("/api/cars/"+id, getHeaders()).then(
+    return await HTTP.get("/api/cars/"+id, getHeaders()).then(
         (response)=>{
             return {status: response.status, car: response.data};
         }).catch((error)=>{
         console.log(error.response);
         return {status: error.response.status};
-    })
-    return result;
+    });
 }
 
 async function doMaintenance(id){
-    let result = await HTTP.patch("api/cars/maintenance/"+id,{} ,getHeaders())
+    return await HTTP.patch("api/cars/maintenance/" + id, {}, getHeaders())
         .then(response => {
             return response.data;
         }).catch(error => {
             console.log(error.response);
-        })
-    return result;
+        });
 }
 
 async function deleteCarById(id){
-    let result = await HTTP.delete("api/cars/"+id, getHeaders())
-        .then(response =>{
+    return await HTTP.delete("api/cars/" + id, getHeaders())
+        .then(response => {
             return response.status;
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error.response);
         });
-    return result;
 }
 
 async function updateCar(updatedCar){
-    let result = await HTTP.put("/api/cars", updatedCar, getHeaders())
+    return await HTTP.put("/api/cars", updatedCar, getHeaders())
         .then(response => {
                 console.log(response);
                 return response;
             }
-        ).catch(error=>{
+        ).catch(error => {
             console.log(error.response);
             return error.response;
         });
-    return result;
+}
+
+async function partialUpdate(carId, fieldsToUpdate){
+    return await HTTP.patch("/api/cars/" + carId, fieldsToUpdate, getHeaders())
+        .then(response => {
+                console.log(response);
+                return response;
+            }
+        ).catch(error => {
+            return error.response;
+        });
 }
 
 async function saveCar(savedCar){
-    let result = await HTTP.post("/api/cars", savedCar, getHeaders())
+    return await HTTP.post("/api/cars", savedCar, getHeaders())
         .then(response => {
                 console.log(response);
                 return response;
             }
-        ).catch(error=>{
+        ).catch(error => {
             console.log(error.response);
             return error.response;
         });
-    return result;
 }

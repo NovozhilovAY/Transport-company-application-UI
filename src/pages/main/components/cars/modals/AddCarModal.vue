@@ -57,11 +57,11 @@
         <legend>Местоположение</legend>
         <p class="horizontal-p">
           Широта:
-          <input class="input-field" type="text" v-model="savedCar.latitude">
+          <input class="input-field" type="number" v-model="savedCar.latitude">
         </p>
         <p class="horizontal-p">
           Долгота:
-          <input class="input-field" type="text" v-model="savedCar.longitude">
+          <input class="input-field" type="number" v-model="savedCar.longitude">
         </p>
       </fieldset>
       <div class="modal-footer">
@@ -83,10 +83,14 @@ export default {
       savedCar: {},
       errors:[],
       freeDrivers:[],
-      optionsData:[]
+      optionsData:[],
+      DEFAULT_LATITUDE: 56.262796,
+      DEFAULT_LONGITUDE: 44.003158
     }
   },
   mounted() {
+    this.savedCar.latitude = this.DEFAULT_LATITUDE;
+    this.savedCar.longitude = this.DEFAULT_LONGITUDE;
     this.freeDrivers.push({});
     this.getFreeDrivers();
   },
