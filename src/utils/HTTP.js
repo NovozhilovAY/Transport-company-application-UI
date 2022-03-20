@@ -12,7 +12,7 @@ HTTP.interceptors.response.use((config)=>{
     return config;
 }, error => {
     const originalRequest = error.config;
-    if(error.response.status === 401 && error.response.data.message !== "Bad credentials"){
+    if(error.response.status === 401 && error.response.data.message === "Full authentication is required to access this resource"){
             LocalStorageManager.removeToken();
             axios.post(SERVER_URL + "/api/auth/refresh", {refreshToken: LocalStorageManager.getRefreshToken()}, getHeaders())
                 .then(result=>{
