@@ -48,13 +48,21 @@ export default {
       driverToUpdate:{},
       deleteDialogOpen: false,
       updateDialogOpen: false,
-      saveDialogOpen: false
+      saveDialogOpen: false,
+      updater:{}
     }
   },
   mounted() {
     this.getAllDrivers();
+    this.updater = this.updateData();
+  },
+  unmounted() {
+    clearInterval(this.updater);
   },
   methods:{
+    updateData(){
+      return setInterval(this.getAllDrivers, 3000);
+    },
     getAllDrivers(){
       DriverService.getAllDrivers().then(result=>{
         this.drivers = result.sort((a, b)=>a.id - b.id);

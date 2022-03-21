@@ -36,17 +36,25 @@ export default {
       userToUpdate: {},
       deleteDialogOpen: false,
       updateDialogOpen: false,
-      saveDialogOpen: false
+      saveDialogOpen: false,
+      updater:{}
     }
   },
   mounted() {
     this.getAllUsers();
+    this.updater = this.updateData();
+  },
+  unmounted() {
+    clearInterval(this.updater);
   },
   methods:{
     getAllUsers(){
       UserService.getAllUsers().then(result=>{
         this.users = result.sort((a, b)=>a.id - b.id);
       })
+    },
+    updateData(){
+      return setInterval(this.getAllUsers, 3000);
     },
     deleteUser(user){
       UserService.deleteById(user.id).then(()=>{
