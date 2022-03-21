@@ -3,7 +3,9 @@ export const LocalStorageManager = {
     getRefreshToken,
     setToken,
     removeToken,
-    removeUser
+    removeUser,
+    getUser,
+    isUserInLocalStorage
 }
 
 function getRefreshToken(){
@@ -13,13 +15,9 @@ function removeToken(){
     let user = getUser();
     delete user.token;
     localStorage.setItem("user", JSON.stringify(user));
-    console.log("User bez tokena");
-    console.log(getUser());
 }
 
 function getUser(){
-    console.log("getUser");
-    console.log(JSON.parse(localStorage.getItem("user")));
     return JSON.parse(localStorage.getItem("user"));
 }
 
@@ -30,5 +28,9 @@ function setToken(token){
 }
 
 function removeUser(){
-    localStorage.removeItem("user");
+    localStorage.clear();
+}
+
+function isUserInLocalStorage(){
+    return localStorage.getItem("user") !== null;
 }

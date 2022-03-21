@@ -11,8 +11,12 @@ let HTTP = axios.create({
 HTTP.interceptors.response.use((config)=>{
     return config;
 }, error => {
+
     const originalRequest = error.config;
     if(error.response.status === 401 && error.response.data.message === "Full authentication is required to access this resource"){
+            if(!LocalStorageManager.isUserInLocalStorage()){
+                return router.push({path:"/login"});
+            }
             LocalStorageManager.removeToken();
             axios.post(SERVER_URL + "/api/auth/refresh", {refreshToken: LocalStorageManager.getRefreshToken()}, getHeaders())
                 .then(result=>{
@@ -23,7 +27,7 @@ HTTP.interceptors.response.use((config)=>{
                 .catch(error=>{
                     if(error.response.data.message === "Invalid refreshToken"){
                         LocalStorageManager.removeUser();
-                        router.push({path:"/login"});
+                        return router.push({path:"/login"});
                     }
                 });
     }
