@@ -25,7 +25,7 @@
         <fieldset class="block-item">
           <legend>Роли</legend>
           <div class="role" v-for="roleItem in rolesCheckBoxItems" :key="roleItem.text">
-            <input name="roles" type="checkbox" :value="roleItem.value" v-model="updatedUser.roles" v-on:change="changeValue">
+            <input v-bind:disabled="isRoleCheckboxDisabled(roleItem.text)" name="roles" type="checkbox" :value="roleItem.value" v-model="updatedUser.roles" v-on:change="changeValue">
             <label>{{roleItem.text}}</label>
           </div>
         </fieldset>
@@ -101,6 +101,13 @@ export default {
       for (let i = 0;i<this.roles.length;i++){
         this.rolesCheckBoxItems.push({text: this.roles[i].name.replace("ROLE_", ""), value: this.roles[i]});
       }
+    },
+    isRoleCheckboxDisabled(role){
+      let currentUser = JSON.parse(localStorage.getItem('user'));
+      if(currentUser.username !== this.updatedUser.login){
+        return false;
+      }
+      return role === "ADMIN";
     }
   }
 }
@@ -204,5 +211,6 @@ export default {
 .role{
   margin-top: 10px;
 }
+
 
 </style>

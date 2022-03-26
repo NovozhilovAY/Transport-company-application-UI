@@ -1,7 +1,7 @@
 <template>
   <div class="table-container">
     <div class="error-div" v-for="error in errors" :key="error">
-      <div class="l-side"><p class="error-msg">Error: {{error.message}}</p></div>
+      <div class="l-side"><p class="error-msg">Error: {{error.details}}</p></div>
       <div class="r-side"><button v-on:click="deleteError(error)" class="delete-error-btn delete-btn">&#10007;</button></div>
     </div>
     <table class="users-table">
@@ -216,11 +216,11 @@ th{
 }
 
 .l-side{
-  width: 80%;
+  width: 90%;
 }
 
 .r-side{
-  width: 20%;
+  width: 10%;
   display: flex;
   justify-content: right;
   vertical-align: center;

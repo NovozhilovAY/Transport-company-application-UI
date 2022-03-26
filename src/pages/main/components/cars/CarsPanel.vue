@@ -54,7 +54,7 @@ export default {
 
   methods:{
     updateData(){
-      return setInterval((this.getCars), 3000);
+      return setInterval((this.getCars), 2000);
     },
     getCars(){
       CarService.getAllCars().then(result => {
