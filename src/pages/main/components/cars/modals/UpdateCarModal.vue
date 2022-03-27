@@ -82,7 +82,7 @@ export default {
   },
   data(){
     return{
-      updatedCar: this.car,
+      updatedCar: JSON.parse(JSON.stringify(this.car)),
       freeDrivers:[],
       errors:[],
       optionsData:[],

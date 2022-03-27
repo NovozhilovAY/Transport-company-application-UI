@@ -104,7 +104,7 @@ export default {
     },
     isRoleCheckboxDisabled(role){
       let currentUser = JSON.parse(localStorage.getItem('user'));
-      if(currentUser.username !== this.updatedUser.login){
+      if(currentUser.username !== this.user.login){
         return false;
       }
       return role === "ADMIN";

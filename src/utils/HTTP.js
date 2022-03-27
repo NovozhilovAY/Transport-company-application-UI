@@ -24,11 +24,9 @@ HTTP.interceptors.response.use((config)=>{
                     originalRequest.headers = getHeaders().headers;
                     return HTTP.request(originalRequest);
                 })
-                .catch(error=>{
-                    if(error.response.data.message === "Invalid refreshToken"){
-                        LocalStorageManager.removeUser();
-                        return router.push({path:"/login"});
-                    }
+                .catch(()=>{
+                    LocalStorageManager.removeUser();
+                    return router.push({path:"/login"});
                 });
     }
     throw error;

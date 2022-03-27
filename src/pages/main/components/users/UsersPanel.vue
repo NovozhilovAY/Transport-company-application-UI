@@ -1,8 +1,16 @@
 <template>
   <div class="table-container">
+    <SearchField :elements="users"
+                 :search-params="[
+                     {value: 'id', text:'ID'},
+                     {value: 'login', text:'Логин'},
+                     {value: 'roles', text:'Роль'}]"
+                 @resultFound="getFoundedUsers"
+                 @clear="onClearSearchField">
+    </SearchField>
     <table class="users-table">
       <tr class="table-header"><th>id</th><th>Логин</th><th>Роли</th></tr>
-      <tr class="row" v-for="user in users" :key="user.id">
+      <tr class="row" v-for="user in currentUsers" :key="user.id">
         <td class="table-cell">{{user.id}}</td>
         <td class="table-cell">{{user.login}}</td>
         <td class="table-cell">{{this.getRoleNames(user)}}</td>
@@ -25,19 +33,23 @@ import {UserService} from "@/services/UserService";
 import ConfirmDialog from "@/pages/main/components/cars/modals/ConfirmDialog";
 import UpdateUserModal from "@/pages/main/components/users/modals/UpdateUserModal";
 import SaveUserModal from "@/pages/main/components/users/modals/SaveUserModal";
+import SearchField from "@/pages/main/components/SearchField";
 
 export default {
   name: "UsersPanel",
-  components: {SaveUserModal, UpdateUserModal, ConfirmDialog},
+  components: {SearchField, SaveUserModal, UpdateUserModal, ConfirmDialog},
   data(){
     return{
       users:[],
+      currentUsers:[],
       userToDelete: {},
       userToUpdate: {},
       deleteDialogOpen: false,
       updateDialogOpen: false,
       saveDialogOpen: false,
-      updater:{}
+      updater:{},
+      currentUsersInitialized: false,
+      searchFieldClear: true
     }
   },
   mounted() {
@@ -51,6 +63,10 @@ export default {
     getAllUsers(){
       UserService.getAllUsers().then(result=>{
         this.users = result.sort((a, b)=>a.id - b.id);
+        if(!this.currentUsersInitialized || this.searchFieldClear){
+          this.currentUsers = this.users;
+          this.currentUsersInitialized = true;
+        }
       })
     },
     updateData(){
@@ -59,6 +75,9 @@ export default {
     deleteUser(user){
       UserService.deleteById(user.id).then(()=>{
         this.users.splice(this.users.indexOf(user),1);
+        if(!this.searchFieldClear){
+          this.currentUsers.splice(this.currentUsers.indexOf(user),1);
+        }
       });
     },
     getRoleNames(user){
@@ -89,6 +108,9 @@ export default {
     updateModalUpdate(updatedUser){
       this.updateDialogOpen = false;
       this.users[this.users.map((user)=>user.id).indexOf(updatedUser.id)] = updatedUser;
+      if(!this.searchFieldClear){
+        this.currentUsers[this.currentUsers.map((user)=>user.id).indexOf(updatedUser.id)] = updatedUser;
+      }
     },
     saveModalExit(){
       this.saveDialogOpen = false;
@@ -96,8 +118,18 @@ export default {
     saveModalSave(user){
       this.saveDialogOpen = false;
       this.users.push(user);
+      if(!this.searchFieldClear){
+        this.currentUsers.push(user);
+      }
+    },
+    getFoundedUsers(users){
+      this.searchFieldClear = false;
+      this.currentUsers = users;
+    },
+    onClearSearchField(){
+      this.searchFieldClear = true;
+      this.currentUsers = this.users;
     }
-
   }
 }
 </script>

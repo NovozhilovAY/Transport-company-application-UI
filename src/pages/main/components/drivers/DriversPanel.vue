@@ -4,9 +4,20 @@
       <div class="l-side"><p class="error-msg">Error: {{error.details}}</p></div>
       <div class="r-side"><button v-on:click="deleteError(error)" class="delete-error-btn delete-btn">&#10007;</button></div>
     </div>
+    <SearchField :elements="drivers"
+                 :search-params="[
+                     {value: 'id', text:'ID'},
+                     {value: 'firstName', text:'Имя'},
+                     {value: 'lastName', text:'Фамилия'},
+                     {value: 'middleName', text:'Отчество'},
+                     {value: 'drivingLicense', text:'Номер ВУ'}
+                     ]"
+                 @resultFound="getFoundedDrivers"
+                 @clear="clearSearchField">
+    </SearchField>
     <table class="users-table">
       <tr class="table-header"><th>id</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Номер ВУ</th></tr>
-      <tr class="row" v-for="driver in drivers" :key="driver.id">
+      <tr class="row" v-for="driver in currentDrivers" :key="driver.id">
         <td class="table-cell">{{driver.id}}</td>
         <td class="table-cell">{{driver.lastName}}</td>
         <td class="table-cell">{{driver.firstName}}</td>
@@ -37,19 +48,23 @@ import {DriverService} from "@/services/DriverService";
 import ConfirmDialog from "@/pages/main/components/cars/modals/ConfirmDialog";
 import UpdateDriverModal from "@/pages/main/components/drivers/modals/UpdateDriverModal";
 import SaveDriverModal from "@/pages/main/components/drivers/modals/SaveDriverModal";
+import SearchField from "@/pages/main/components/SearchField";
 export default {
   name: "DriversPanel",
-  components: {SaveDriverModal, UpdateDriverModal, ConfirmDialog},
+  components: {SearchField, SaveDriverModal, UpdateDriverModal, ConfirmDialog},
   data(){
     return{
       errors:[],
       drivers:[],
+      currentDrivers:[],
       driverToDelete: {},
       driverToUpdate:{},
       deleteDialogOpen: false,
       updateDialogOpen: false,
       saveDialogOpen: false,
-      updater:{}
+      updater:{},
+      currentDriversInit: false,
+      searchFieldClear: true
     }
   },
   mounted() {
@@ -66,6 +81,10 @@ export default {
     getAllDrivers(){
       DriverService.getAllDrivers().then(result=>{
         this.drivers = result.sort((a, b)=>a.id - b.id);
+        if(!this.currentDriversInit || this.searchFieldClear){
+          this.currentDrivers = this.drivers;
+          this.currentDriversInit = true;
+        }
       })
     },
     deleteDialogNo(){
@@ -82,6 +101,9 @@ export default {
           console.log(response.data.errors);
         }else {
           this.drivers.splice(this.drivers.indexOf(driver),1);
+          if(!this.searchFieldClear){
+            this.currentDrivers.splice(this.currentDrivers.indexOf(driver),1);
+          }
         }
       });
     },
@@ -91,6 +113,9 @@ export default {
     updateModalUpdate(updatedDriver){
       this.updateDialogOpen = false;
       this.drivers[this.drivers.map((driver)=>driver.id).indexOf(updatedDriver.id)] = updatedDriver;
+      if(!this.searchFieldClear){
+        this.currentDrivers[this.currentDrivers.map((driver)=>driver.id).indexOf(updatedDriver.id)] = updatedDriver;
+      }
     },
     saveModalExit(){
       this.saveDialogOpen = false;
@@ -98,9 +123,20 @@ export default {
     saveModalSave(savedDriver){
       this.saveDialogOpen = false;
       this.drivers.push(savedDriver);
+      if(!this.searchFieldClear){
+        this.currentDrivers.push(savedDriver);
+      }
     },
     deleteError(error){
       this.errors.splice(this.errors.indexOf(error), 1);
+    },
+    getFoundedDrivers(drivers){
+      this.searchFieldClear = false;
+      this.currentDrivers = drivers;
+    },
+    clearSearchField(){
+      this.searchFieldClear = true;
+      this.currentDrivers = this.drivers;
     }
 
   }

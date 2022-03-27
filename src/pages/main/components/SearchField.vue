@@ -1,8 +1,11 @@
 <template>
   <div class="search-div">
-    <input class="search-text-field" type="text" v-model="text" :placeholder="phText" v-on:change="findItems()">
+    <input class="search-text-field" type="text" v-model="text" placeholder="Найти" v-on:change="findItems()">
     <div v-if="text===''" class="right-element">&#128270;</div>
     <div v-else class="right-element"><button v-on:click="clearTextField" class="clear-btn">&#10006;</button></div>
+    <select class="search-select" v-model="field">
+      <option v-for="(param, index) in params" :key="index" :value="param">{{param.text}}</option>
+    </select>
   </div>
 
 </template>
@@ -12,13 +15,19 @@ export default {
   name: "SearchField",
   props:{
     elements: {},
-    fieldToSearch: {},
-    phText:String
+    phText:String,
+    searchParams: {}
   },
   data(){
     return{
-      text:""
+      text:"",
+      field: {},
+      params: {}
     }
+  },
+  mounted() {
+    this.params = JSON.parse(JSON.stringify(this.searchParams));
+    this.field = this.params[0];
   },
   methods:{
     findItems(){
@@ -27,7 +36,8 @@ export default {
       }
       let result = [];
       for(let i = 0; i < this.elements.length; i++){
-        let stringValueOfElement = String(this.elements[i][this.fieldToSearch]).toLowerCase();
+        let stringValueOfElement = String(JSON.stringify(this.elements[i][this.field.value])).toLowerCase();
+        console.log(stringValueOfElement);
         let searchText = this.text.toLowerCase();
         if(stringValueOfElement.includes(searchText)){
           result.push(this.elements[i]);
@@ -50,8 +60,10 @@ export default {
   color: gray;
   font-size: 18px;
   box-sizing: border-box;
-  width: 100%;
+  width: 95%;
+  margin-left: auto;
   margin-top: 10px;
+  margin-right: auto;
   border-style: solid;
   border-radius: 10px;
   border-width: 1px;
@@ -82,5 +94,17 @@ export default {
   padding: 0;
   margin-right: 5px;
 }
+
+.search-select{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  font-size: 18px;
+  border-radius: 10px;
+  border-style: none;
+  outline:none;
+}
+
+
 
 </style>

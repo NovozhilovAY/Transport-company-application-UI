@@ -102,8 +102,6 @@ export default {
     getWeeklyStat(){
       HistoryService.getWeeklyStatistics(this.car.id).then(res => {
         this.chartOptions = getChatrConfiguration(res.kilometrage, res.week);
-        console.log(this.chartOptions.options);
-        console.log(this.chartOptions.series);
         this.isDataLoaded = true;
       });
     },

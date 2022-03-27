@@ -12,7 +12,6 @@ async function getWeeklyStatistics(carId){
     let result = {week:[], kilometrage:[]};
     result.week = getWeek().reverse();
     result.kilometrage = await HTTP.post("/api/history/date",{id: carId, dates: result.week} ,getHeaders()).then(result=>{return result.data});
-    console.log(result.kilometrage);
     result.week = getDDMMFormat(result.week);
     result.kilometrage = result.kilometrage.map(km => Math.floor(km));
     return result;
@@ -22,7 +21,6 @@ async function getMonthlyStatistics(carId){
     let result = {month:[], kilometrage:[]};
     result.month = getMonth().reverse();
     result.kilometrage = await HTTP.post("/api/history/date", {id: carId, dates: result.month}, getHeaders()).then(result=>{return result.data});
-    console.log(result.kilometrage);
     result.month = getDDMMFormat(result.month);
     result.kilometrage = result.kilometrage.map(km => Math.floor(km));
     return result;

@@ -1,9 +1,21 @@
 <template>
   <div class="container">
     <div class="left-side">
+      <SearchField ph-text="Поиск по фамилии водителя"
+                   :elements="cars"
+                   :search-params="[
+                     {value: 'id', text:'ID'},
+                     {value: 'brand', text:'Марка'},
+                     {value: 'model', text:'Модель'},
+                     {value: 'licensePlate', text:'Номер'},
+                     {value: 'year', text:'Год'},
+                     {value: 'driver', text:'Водитель'}
+                     ]"
+                   @resultFound="getFoundedCars"
+                   @clear="clearSearchField"></SearchField>
       <table class="cars-table">
         <tr class="table-header"><th>id</th><th>Марка</th><th>Модель</th><th>Номер</th></tr>
-        <tr class="row" v-for="(c, index) in cars" :key="index"
+        <tr class="row" v-for="(c, index) in currentCars" :key="index"
             v-bind:class="{warning: isWarning(c), danger:isDanger(c)}"
             @click="selectedIndex = index">
           <td>{{c.id}}</td>
@@ -16,7 +28,7 @@
     </div>
     <AddCarModal v-if="addCarModalOpen" @exit="closeAddCarModal" @saveCar="addCar"></AddCarModal>
     <div class="right-side">
-      <CarInfo v-if="isDataLoaded" v-bind:car="this.cars[selectedIndex]"
+      <CarInfo v-if="isDataLoaded && this.currentCars.length !== 0" v-bind:car="this.currentCars[selectedIndex]"
                @doMaintenance="doMaintenance"
                @deleteCar="deleteCarById"
                @update="handleUpdatedCar"></CarInfo>
@@ -28,18 +40,22 @@
 import {CarService} from "@/services/CarService";
 import CarInfo from "@/pages/main/components/cars/CarInfo";
 import AddCarModal from "@/pages/main/components/cars/modals/AddCarModal";
+import SearchField from "@/pages/main/components/SearchField";
 
 export default {
   name: "CarsPanel",
-  components: {AddCarModal, CarInfo},
+  components: {SearchField, AddCarModal, CarInfo},
   data: function () {
     return {
       cars: [],
+      currentCars:[],
+      currentCarsInit:false,
       selectedCar: null,
       selectedIndex: -1,
       updater: {},
       isDataLoaded: false,
-      addCarModalOpen: false
+      addCarModalOpen: false,
+      searchFieldClear:true
     }
   },
 
@@ -60,10 +76,13 @@ export default {
       CarService.getAllCars().then(result => {
         if(result.status === 200){
           this.cars = result.cars.sort((a, b)=>a.id - b.id);
-          console.log(result.cars);
           if(this.cars.length !== 0 && this.selectedIndex === -1){
             this.selectedIndex = 0;
             this.isDataLoaded = true;
+          }
+          if(!this.currentCarsInit || this.searchFieldClear){
+            this.currentCars = this.cars;
+            this.currentCarsInit = true;
           }
         }
       })
@@ -83,15 +102,8 @@ export default {
       this.isDataLoaded = true;
     },
     doMaintenance(car){
-      let index;
-      for (let i = 0; i< this.cars.length;i++){
-        if(this.cars[i].id === car.id){
-          index = i;
-        }
-      }
       CarService.doMaintenance(car.id).then(result =>{
-            this.cars[index] = result;
-            this.selectedCar = result;
+            this.handleUpdatedCar(result);
         }
       );
     },
@@ -102,11 +114,17 @@ export default {
               this.selectedIndex = 0;
             }
             this.cars.splice(this.cars.indexOf(car),1);
+            if(!this.searchFieldClear){
+              this.currentCars.splice(this.currentCars.indexOf(car),1);
+            }
           }
       )
     },
     handleUpdatedCar(updatedCar){
       this.cars[this.cars.map((car)=>car.id).indexOf(updatedCar.id)] = updatedCar;
+      if(!this.searchFieldClear){
+        this.currentCars[this.currentCars.map((car)=>car.id).indexOf(updatedCar.id)] = updatedCar;
+      }
     },
     closeAddCarModal(){
       this.addCarModalOpen = false;
@@ -114,7 +132,18 @@ export default {
     addCar(car){
       console.log('addCar');
       this.cars.push(car);
+      if(!this.searchFieldClear){
+        this.currentCars.push(car);
+      }
       this.addCarModalOpen = false;
+    },
+    getFoundedCars(cars){
+      this.searchFieldClear=false;
+      this.currentCars = cars;
+    },
+    clearSearchField(){
+      this.searchFieldClear = true;
+      this.currentCars = this.cars;
     }
 
   }
