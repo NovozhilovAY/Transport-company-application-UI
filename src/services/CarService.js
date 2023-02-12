@@ -5,7 +5,9 @@ import {getHeaders} from "@/utils/AuthHeader";
 export const CarService = {
     getAllCars,
     getCarById,
-    doMaintenance,
+    doTo1,
+    doTo2,
+    doKr,
     deleteCarById,
     updateCar,
     saveCar,
@@ -32,8 +34,26 @@ async function getCarById(id){
     });
 }
 
-async function doMaintenance(id){
-    return await HTTP.patch("api/cars/maintenance/" + id, {}, getHeaders())
+async function doTo1(id){
+    return await HTTP.patch("api/cars/to-1/" + id, {}, getHeaders())
+        .then(response => {
+            return response.data;
+        }).catch(error => {
+            console.log(error.response);
+        });
+}
+
+async function doTo2(id){
+    return await HTTP.patch("api/cars/to-2/" + id, {}, getHeaders())
+        .then(response => {
+            return response.data;
+        }).catch(error => {
+            console.log(error.response);
+        });
+}
+
+async function doKr(id){
+    return await HTTP.patch("api/cars/kr/" + id, {}, getHeaders())
         .then(response => {
             return response.data;
         }).catch(error => {
