@@ -2,7 +2,8 @@ import HTTP from "@/utils/HTTP";
 import {getHeaders} from "@/utils/AuthHeader";
 
 export const CalendarService = {
-    getMaintDates
+    getMaintDates,
+    getCarsYearMaintCalendar
 }
 
 async function getMaintDates(id) {
@@ -13,4 +14,14 @@ async function getMaintDates(id) {
         console.log(error.response);
         return {status: error.response.status};
     });
+}
+
+async function getCarsYearMaintCalendar() {
+    return await HTTP.get("/api/calendar/maint-cars", getHeaders())
+        .then((response)=>{
+            return response.data;
+        }).catch((error)=>{
+            console.log(error.response);
+            return {status: error.response.status};
+        });
 }

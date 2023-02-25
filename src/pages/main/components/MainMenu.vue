@@ -5,6 +5,7 @@
     <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'drivers'>Водители</button>
     <button v-if="this.hasRole(['ADMIN'])" v-on:click="setMenuItem" id = 'users'>Пользователи</button>
     <button v-if="this.hasRole(['ADMIN'])" v-on:click="setMenuItem" id = 'correcting'>Корректировка</button>
+    <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'calendar'>Расписание воздействий</button>
   </div>
 
   <div id="main">
@@ -13,6 +14,7 @@
     <DriversPanel v-if="this.selectedItem === 'drivers'"></DriversPanel>
     <UsersPanel v-if="this.selectedItem ==='users'"></UsersPanel>
     <CorrectingPanel v-if="this.selectedItem === 'correcting'"></CorrectingPanel>
+    <CalendarPanel v-if="this.selectedItem === 'calendar'"></CalendarPanel>
   </div>
 </template>
 
@@ -22,9 +24,10 @@ import CarsPanel from "@/pages/main/components/cars/CarsPanel";
 import UsersPanel from "@/pages/main/components/users/UsersPanel";
 import DriversPanel from "@/pages/main/components/drivers/DriversPanel";
 import CorrectingPanel from "@/pages/main/components/correcting/CorrectingPanel";
+import CalendarPanel from "@/pages/main/components/calendar/CalendarPanel";
 export default {
   name: "MainMenu",
-  components: {CorrectingPanel, DriversPanel, UsersPanel, CarsPanel, MainMap},
+  components: {CalendarPanel, CorrectingPanel, DriversPanel, UsersPanel, CarsPanel, MainMap},
   data(){
     return{
       selectedItem: "map"
