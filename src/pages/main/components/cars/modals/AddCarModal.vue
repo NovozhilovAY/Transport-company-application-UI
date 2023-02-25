@@ -29,11 +29,14 @@
           <p>Пробег, км:
             <input class="input-field" type="number" v-model="savedCar.kilometrage">
           </p>
-          <p>Частота ТО, км:
-            <input class="input-field" type="number" v-model="savedCar.maintenanceFreq">
+          <p>Норматив ТО-1, км:
+            <input class="input-field" type="number" v-model="savedCar.normativeTo1">
           </p>
-          <p>Следующее ТО через, км:
-            <input class="input-field" type="number" v-model="savedCar.kmBeforeMaint">
+          <p>Норматив ТО-2, км:
+            <input class="input-field" type="number" v-model="savedCar.normativeTo2">
+          </p>
+          <p>Норматив КР, км:
+            <input class="input-field" type="number" v-model="savedCar.normativeKr">
           </p>
 
         </fieldset>
