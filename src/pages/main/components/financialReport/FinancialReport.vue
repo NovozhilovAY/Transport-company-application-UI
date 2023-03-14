@@ -1,38 +1,57 @@
 <template>
-  <fieldset class="block-item">
-    <legend>Данные для отчета</legend>
-    <div>
-      <p>Количество рабочих дней в году</p>
-      <input v-model="reportData.numWorkingDays">
-      <p>Стоимость ТО-1</p>
-      <input v-model="reportData.to1Cost">
-      <p>Стоимость ТО-2</p>
-      <input v-model="reportData.to2Cost">
-      <p>Стоимость КР</p>
-      <input v-model="reportData.krCost">
+  <div class="common-container">
+    <div class="container-financial">
+
+      <fieldset class="block-item">
+        <legend class="bold-legend-financial">Финансовый прогноз</legend>
+        <div class="financial-prop">
+          <p>Годовой пробег всех автомобилей :  <span class="bold-prop">{{report.totalKilometrage}} км.</span></p>
+          <p>Общее количество ТО-1 : <span class="bold-prop">{{report.totalNumOfTo1}} ед.</span> </p>
+          <p>Общее количество ТО-2 :  <span class="bold-prop">{{report.totalNumOfTo2}} ед.</span></p>
+          <p>Общее количество КР :  <span class="bold-prop">{{report.totalNumOfKr}} ед.</span></p>
+          <p>Стоимость проведения ТО-1 :  <span class="bold-prop">{{report.totalCostTo1}} руб.</span></p>
+          <p>Стоимость проведения ТО-2 :  <span class="bold-prop">{{report.totalCostTo2}} руб.</span></p>
+          <p>Стоимость проведения КР :  <span class="bold-prop">{{report.totalCostKr}} руб.</span></p>
+          <p>Итого годовые затраты на ТО и КР :  <span class="bold-prop">{{report.totalCosts}} руб.</span></p>
+        </div>
+
+      </fieldset>
+      <fieldset class="block-item block-item-data">
+        <legend class="bold-legend-financial">Данные для отчета</legend>
+        <div class="financial-prop">
+          <p class="financial-prop-data">Количество рабочих дней в году</p>
+          <select class="select-financial" name="" id="" v-model="reportData.numWorkingDays">
+            <option :value=NumWorkingDays.SEVEN.value>{{NumWorkingDays.SEVEN.value}}</option>
+            <option :value=NumWorkingDays.SIX.value>{{ NumWorkingDays.SIX.value }}</option>
+            <option :value=NumWorkingDays.FIFE.value>{{ NumWorkingDays.FIFE.value }}</option>
+          </select>
+          <!--        <input class="financial-inp" v-model="reportData.numWorkingDays">-->
+          <p class="financial-prop-data">Стоимость ТО-1</p>
+          <input class="financial-inp" v-model="reportData.to1Cost">
+          <p class="financial-prop-data">Стоимость ТО-2</p>
+          <input class="financial-inp" v-model="reportData.to2Cost">
+          <p class="financial-prop-data">Стоимость КР</p>
+          <input class="financial-inp" v-model="reportData.krCost">
+        </div>
+        <button class="btn-financial" @click="updateReportData">Обновить</button>
+      </fieldset>
     </div>
-    <button @click="updateReportData">Обновить</button>
-  </fieldset>
-  <fieldset class="block-item">
-    <legend>Финансовый прогноз</legend>
     <div>
-      <p>Годовой пробег всех автомобилей : {{report.totalKilometrage}} км.</p>
-      <p>Общее количество ТО-1 : {{report.totalNumOfTo1}}</p>
-      <p>Общее количество ТО-2 : {{report.totalNumOfTo2}}</p>
-      <p>Общее количество КР : {{report.totalNumOfKr}}</p>
-      <p>Стоимость проведения ТО-1 : {{report.totalCostTo1}} руб.</p>
-      <p>Стоимость проведения ТО-2 : {{report.totalCostTo2}} руб.</p>
-      <p>Стоимость проведения КР : {{report.totalCostKr}} руб.</p>
-      <p>Итого годовые затраты на ТО и КР : {{report.totalCosts}} руб.</p>
+      <fieldset class="block-item fieldset-financial-car">
+        <legend class="bold-legend-financial">Прогноз по каждому автомобилю</legend>
+              <CarReportCart v-for="(car) in report.carFinancialReports" :car-report="car" :key="car"></CarReportCart>
+      </fieldset>
+
     </div>
-    <CarReportCart v-for="(car) in report.carFinancialReports" :car-report="car" :key="car"></CarReportCart>
-  </fieldset>
+
+  </div>
 
 </template>
 
 <script>
 import {FinancialReportService} from "@/services/FinancialReportService";
 import CarReportCart from "@/pages/main/components/financialReport/CarReportCart";
+import {NumWorkingDays} from "@/pages/main/components/financialReport/model/NumWorkingDays";
 
 export default {
   name: "FinancialReport",
@@ -40,7 +59,8 @@ export default {
   data(){
     return {
       report:{},
-      reportData:{}
+      reportData:{},
+      NumWorkingDays: NumWorkingDays
     }
   },
   mounted() {
@@ -71,10 +91,75 @@ export default {
 
 <style scoped>
 .block-item{
-  margin: 5px;
   border-style: solid;
   border-width: 1px;
   border-radius: 10px;
   width: 85%;
+  margin: 0px 20px 20px 0;
+}
+.block-item-data{
+  margin-left: 0;
+  margin-right: 0;
+}
+.container-financial{
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+.bold-legend-financial{
+  font-size: 20px;
+  font-weight: bold;
+}
+.financial-prop{
+  font-size: 17px;
+}
+.bold-prop{
+  font-weight: bold;
+}
+.financial-inp{
+  font-size: 16px;
+  width: 170px;
+  height: 20px;
+}
+.financial-prop-data{
+  margin-bottom: 5px;
+}
+.select-financial{
+  width: 178px;
+  height: 26px;
+  font-size: 16px;
+}
+.btn-financial{
+  padding: 7px;
+  color: white;
+  background: #4AAE9B;
+  border: 1px solid #4AAE9B;
+  border-radius: 3px;
+  width: 140px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  height: 35px;
+  margin: 15px 0 0 0px;
+}
+.fieldset-financial-car{
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  margin-right: 40px
+}
+.common-container{
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 0 20px;
+  box-sizing: border-box;
+  overflow: auto;
+  max-height: 100%;
+}
+.common-container::-webkit-scrollbar{
+  width: 0;
 }
 </style>

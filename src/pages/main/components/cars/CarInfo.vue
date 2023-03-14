@@ -2,7 +2,7 @@
   <div class="info-container">
     <div class="info-block">
       <fieldset class="block-item">
-        <legend>Основная информация</legend>
+        <legend class="bold-legend">Основная информация</legend>
         <p>Марка: {{car.brand}}</p>
         <p>Модель: {{car.model}}</p>
         <p>Номер: {{car.licensePlate}}</p>
@@ -11,7 +11,7 @@
         <p>Среднесуточный пробег: {{car.avgKilometrage}} км.</p>
       </fieldset>
       <fieldset class="block-item-middle">
-        <legend>Техническое обслуживание и капитальный ремонт</legend>
+        <legend class="bold-legend">Техническое обслуживание и капитальный ремонт</legend>
         <table class="to-table">
           <tr><th>Воздействие</th><th>Норматив, км.</th><th>Факт, км.</th><th>Остаток, км.</th><th>Дата</th></tr>
           <tr>
@@ -43,7 +43,7 @@
         </p>
       </fieldset>
       <fieldset class="block-item">
-        <legend>Водитель</legend>
+        <legend class="bold-legend">Водитель</legend>
         <div v-if="car.driver">
           <p>Фамилия: {{car.driver.lastName}}</p>
           <p>Имя: {{car.driver.firstName}}</p>
@@ -57,7 +57,7 @@
     </div>
     <fieldset class="chart-fieldset">
       <legend>
-        <select class="period-selector" v-model="statisticsPeriod">
+        <select class="period-selector bold-legend" v-model="statisticsPeriod">
           <option value="week">Пробег за неделю</option>
           <option value="month">Пробег за месяц</option>
           <option value="year">Пробег за год</option>
@@ -70,7 +70,7 @@
     <div class="info-block">
 
       <fieldset class="control-fieldset">
-        <legend>Управление</legend>
+        <legend class="bold-legend">Управление</legend>
             <button class="edit-btn" @click="updateCarModalOpen = true">Редактировать</button>
             <button class="delete-btn" @click="deleteDialogOpen = true">Удалить</button>
       </fieldset>
@@ -314,6 +314,7 @@ td{
   padding-top: 10px;
   padding-bottom: 10px;
   border-color: #c0bfbf;
+
 }
 
 th{
@@ -322,11 +323,17 @@ th{
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-color: black;
+  text-shadow: black 0px 0px 0.6px;
+  font-weight: normal;
+
 }
 
 .marg-btn{
   margin-left: 5%;
   margin-right: 5%;
+}
+.bold-legend{
+  font-weight: bold;
 }
 
 </style>
