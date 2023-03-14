@@ -39,7 +39,36 @@
     <div>
       <fieldset class="block-item fieldset-financial-car">
         <legend class="bold-legend-financial">Прогноз по каждому автомобилю</legend>
-              <CarReportCart v-for="(car) in report.carFinancialReports" :car-report="car" :key="car"></CarReportCart>
+        <table class="financial-cars-table">
+          <tr class="table-header">
+            <th>id</th>
+            <th>Марка</th>
+            <th>Модель</th>
+            <th>Номер</th>
+            <th>Среднесуточный пробег, км.</th>
+            <th>Пробег за год, км.</th>
+            <th>Количество ТО-1, ед.</th>
+            <th>Затраты на ТО-1, руб.</th>
+            <th>Количество ТО-2, ед.</th>
+            <th>Затраты на ТО-2, руб.</th>
+            <th>Количество КР, ед.</th>
+            <th>Затраты на КР, руб.</th>
+          </tr>
+          <tr class="row" v-for="(car) in report.carFinancialReports" :key="car">
+            <td>{{car.id}}</td>
+            <td>{{car.brand}}</td>
+            <td>{{car.model}}</td>
+            <td class="plate-cell"><PlateNumber :license-plate-number="car.licensePlate"></PlateNumber></td>
+            <td>{{car.avgKilometrage}}</td>
+            <td>{{car.yearKilometrage}}</td>
+            <td>{{car.numOfTo1}}</td>
+            <td>{{car.costOfTo1}}</td>
+            <td>{{car.numOfTo2}}</td>
+            <td>{{car.costOfTo2}}</td>
+            <td>{{car.numOfKr}}</td>
+            <td>{{car.costOfKr}}</td>
+          </tr>
+        </table>
       </fieldset>
 
     </div>
@@ -50,12 +79,12 @@
 
 <script>
 import {FinancialReportService} from "@/services/FinancialReportService";
-import CarReportCart from "@/pages/main/components/financialReport/CarReportCart";
 import {NumWorkingDays} from "@/pages/main/components/financialReport/model/NumWorkingDays";
+import PlateNumber from "@/pages/main/components/cars/plateNumber/PlateNumber";
 
 export default {
   name: "FinancialReport",
-  components: {CarReportCart},
+  components: {PlateNumber},
   data(){
     return {
       report:{},
@@ -149,7 +178,8 @@ export default {
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
-  margin-right: 40px
+  margin-right: 40px;
+  padding-bottom: 20px;
 }
 .common-container{
   display: flex;
@@ -161,5 +191,34 @@ export default {
 }
 .common-container::-webkit-scrollbar{
   width: 0;
+}
+.financial-cars-table{
+  font-size: 18px;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.table-header{
+  width: 100%;
+  text-align: center;
+  vertical-align: center;
+}
+td{
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+
+  padding: 10px;
+  border-color: #c0bfbf;
+}
+
+th{
+  padding: 10px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: black;
+}
+.plate-cell{
+  width: 15%;
+  text-align: center;
 }
 </style>

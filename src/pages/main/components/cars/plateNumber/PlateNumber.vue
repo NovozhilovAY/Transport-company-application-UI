@@ -83,6 +83,8 @@ export default {
   width: 90%;
   height: 100%;
   border-color: black;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .left-part{
