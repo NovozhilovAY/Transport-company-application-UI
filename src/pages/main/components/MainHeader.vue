@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="left"><p class="title">{{title}}</p></div>
+    <div class="left"><p class="title">{{title}}  /  {{menuItem}}</p></div>
     <div class="center"><p class="login-label">{{username}}</p></div>
     <div class="right"><button @click="logout()" class="exit-btn">выход</button></div>
   </div>
@@ -11,6 +11,9 @@ import {LoginService} from "@/services/LoginService";
 
 export default {
   name: "MainHeader",
+  props: {
+    menuItem:String
+  },
   data(){
     return{
       title: "Transport Company Application",

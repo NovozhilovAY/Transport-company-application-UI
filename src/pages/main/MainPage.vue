@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="main-container">
-    <main-header class="main-header"></main-header>
-    <main-menu></main-menu>
+    <main-header :menu-item="selectedItem" class="main-header"></main-header>
+    <main-menu @changeMenuItem="handleChangeMenuItem"></main-menu>
   </div>
 </template>
 
@@ -10,7 +10,18 @@ import MainHeader from "@/pages/main/components/MainHeader";
 import MainMenu from "@/pages/main/components/MainMenu";
 export default {
   name: "MainPage",
-  components: {MainMenu, MainHeader}
+  components: {MainMenu, MainHeader},
+  data(){
+    return{
+      selectedItem:String
+    }
+  },
+  methods:{
+    handleChangeMenuItem(newSelectedItem){
+      console.log(newSelectedItem);
+      this.selectedItem = newSelectedItem;
+    }
+  }
 }
 </script>
 

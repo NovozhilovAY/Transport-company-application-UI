@@ -31,15 +31,21 @@ import FinancialReport from "@/pages/main/components/financialReport/FinancialRe
 export default {
   name: "MainMenu",
   components: {FinancialReport, CalendarPanel, CorrectingPanel, DriversPanel, UsersPanel, CarsPanel, MainMap},
+  emits: ["changeMenuItem"],
   data(){
     return{
       selectedItem: "map"
     }
   },
+  mounted() {
+    this.selectedItem = "map";
+    this.$emit("changeMenuItem", "Карта");
+  },
 
   methods:{
     setMenuItem: function (event){
       this.selectedItem = event.target.id;
+      this.$emit("changeMenuItem", event.target.outerText)
     },
     hasRole(rolesArr){
       let roles = JSON.parse(localStorage.getItem('user')).roles;
