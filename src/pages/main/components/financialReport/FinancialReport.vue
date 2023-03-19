@@ -45,14 +45,15 @@
             <th>Марка</th>
             <th>Модель</th>
             <th>Номер</th>
-            <th>Среднесуточный пробег, км.</th>
-            <th>Пробег за год, км.</th>
-            <th>Количество ТО-1, ед.</th>
-            <th>Затраты на ТО-1, руб.</th>
-            <th>Количество ТО-2, ед.</th>
-            <th>Затраты на ТО-2, руб.</th>
-            <th>Количество КР, ед.</th>
-            <th>Затраты на КР, руб.</th>
+            <th>Среднесуточный пробег, км</th>
+            <th>Пробег за год, км</th>
+            <th>Количество ТО-1, ед</th>
+            <th>Затраты на ТО-1, руб</th>
+            <th>Количество ТО-2, ед</th>
+            <th>Затраты на ТО-2, руб</th>
+            <th>Количество КР, ед</th>
+            <th>Затраты на КР, руб</th>
+            <th>Затраты итого, руб</th>
           </tr>
           <tr class="row" v-for="(car) in report.carFinancialReports" :key="car">
             <td>{{car.id}}</td>
@@ -67,6 +68,7 @@
             <td>{{car.costOfTo2}}</td>
             <td>{{car.numOfKr}}</td>
             <td>{{car.costOfKr}}</td>
+            <td class="bold-cell">{{getAllCosts(car)}}</td>
           </tr>
         </table>
       </fieldset>
@@ -97,6 +99,9 @@ export default {
     this.getFinancialReportData();
   },
   methods:{
+    getAllCosts(car) {
+      return car.costOfTo1 + car.costOfTo2 + car.costOfKr;
+    },
     getFinancialReport() {
       FinancialReportService.getFinancialReport().then(res => {
         this.report = res;
@@ -220,5 +225,9 @@ th{
 .plate-cell{
   width: 15%;
   text-align: center;
+}
+
+.bold-cell{
+  font-weight: bold;
 }
 </style>
