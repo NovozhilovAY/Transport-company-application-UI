@@ -23,6 +23,7 @@ export default {
   methods:{
     getMaintCalendar() {
       CalendarService.getCarsYearMaintCalendar().then(res => {
+        res.calendar.sort((a, b)=>a.id - b.id);
         this.maintCalendar = res.calendar;
       });
     }

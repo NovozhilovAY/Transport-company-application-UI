@@ -104,6 +104,7 @@ export default {
     },
     getFinancialReport() {
       FinancialReportService.getFinancialReport().then(res => {
+        res.carFinancialReports.sort((a, b)=>a.id - b.id);
         this.report = res;
       });
     },
