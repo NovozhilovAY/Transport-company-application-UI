@@ -110,7 +110,8 @@ h1{
   font-size: 19px;
   height: 40px;
   margin: 30px 0 0 300px;
-
 }
-
+.correcting-btn:hover{
+  border-color: black;
+}
 </style>

@@ -177,6 +177,9 @@ export default {
   height: 35px;
   margin: 15px 0 0 0px;
 }
+.btn-financial:hover{
+  border-color: black;
+}
 .fieldset-financial-car{
   font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size: 17px;
