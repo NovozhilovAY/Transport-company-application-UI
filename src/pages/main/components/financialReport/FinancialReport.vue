@@ -26,11 +26,11 @@
             <option :value=NumWorkingDays.FIFE.value>{{ NumWorkingDays.FIFE.value }}</option>
           </select>
           <!--        <input class="financial-inp" v-model="reportData.numWorkingDays">-->
-          <p class="financial-prop-data">Стоимость ТО-1</p>
+          <p class="financial-prop-data">Стоимость ТО-1, руб.</p>
           <input class="financial-inp" v-model="reportData.to1Cost">
-          <p class="financial-prop-data">Стоимость ТО-2</p>
+          <p class="financial-prop-data">Стоимость ТО-2, руб.</p>
           <input class="financial-inp" v-model="reportData.to2Cost">
-          <p class="financial-prop-data">Стоимость КР</p>
+          <p class="financial-prop-data">Стоимость КР, руб.</p>
           <input class="financial-inp" v-model="reportData.krCost">
         </div>
         <button class="btn-financial" @click="updateReportData">Обновить</button>
