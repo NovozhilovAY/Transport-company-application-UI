@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <form class="form-signin" method="post"  @submit="login">
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading">Войдите в профиль</h2>
         <p v-if="invalidCredentials" class="err-field">{{this.errorMessage}}</p>
         <p>
           <input v-model="username" type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
@@ -10,7 +10,7 @@
           <input v-model="password" type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
         </p>
         <p>
-          <button class="btn-submit" type="submit">Login</button>
+          <button class="btn-submit" type="submit">Войти</button>
         </p>
       </form>
     </div>
@@ -66,7 +66,7 @@ export default {
 }
 
 .form-signin{
-  max-width: 330px;
+  max-width: 380px;
   padding: 15px;
   margin: 0 auto;
 }
