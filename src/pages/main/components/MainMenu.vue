@@ -4,6 +4,9 @@
     <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'cars'>Автомобили</button>
     <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'drivers'>Водители</button>
     <button v-if="this.hasRole(['ADMIN'])" v-on:click="setMenuItem" id = 'users'>Пользователи</button>
+    <button v-if="this.hasRole(['ADMIN'])" v-on:click="setMenuItem" id = 'correcting'>Корректировка</button>
+    <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'calendar'>Расписание воздействий</button>
+    <button v-if="this.hasRole(['ADMIN', 'DISPATCHER'])" v-on:click="setMenuItem" id = 'report'>Финансовый прогноз</button>
   </div>
 
   <div id="main">
@@ -11,6 +14,9 @@
     <CarsPanel v-if="this.selectedItem === 'cars'"></CarsPanel>
     <DriversPanel v-if="this.selectedItem === 'drivers'"></DriversPanel>
     <UsersPanel v-if="this.selectedItem ==='users'"></UsersPanel>
+    <CorrectingPanel v-if="this.selectedItem === 'correcting'"></CorrectingPanel>
+    <CalendarPanel v-if="this.selectedItem === 'calendar'"></CalendarPanel>
+    <FinancialReport v-if="this.selectedItem === 'report'"></FinancialReport>
   </div>
 </template>
 
@@ -19,18 +25,27 @@ import MainMap from "@/pages/main/components/map/MainMap";
 import CarsPanel from "@/pages/main/components/cars/CarsPanel";
 import UsersPanel from "@/pages/main/components/users/UsersPanel";
 import DriversPanel from "@/pages/main/components/drivers/DriversPanel";
+import CorrectingPanel from "@/pages/main/components/correcting/CorrectingPanel";
+import CalendarPanel from "@/pages/main/components/calendar/CalendarPanel";
+import FinancialReport from "@/pages/main/components/financialReport/FinancialReport";
 export default {
   name: "MainMenu",
-  components: {DriversPanel, UsersPanel, CarsPanel, MainMap},
+  components: {FinancialReport, CalendarPanel, CorrectingPanel, DriversPanel, UsersPanel, CarsPanel, MainMap},
+  emits: ["changeMenuItem"],
   data(){
     return{
       selectedItem: "map"
     }
   },
+  mounted() {
+    this.selectedItem = "map";
+    this.$emit("changeMenuItem", "Карта");
+  },
 
   methods:{
     setMenuItem: function (event){
       this.selectedItem = event.target.id;
+      this.$emit("changeMenuItem", event.target.outerText)
     },
     hasRole(rolesArr){
       let roles = JSON.parse(localStorage.getItem('user')).roles;

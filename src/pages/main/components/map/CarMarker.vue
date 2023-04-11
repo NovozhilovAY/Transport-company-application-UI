@@ -9,7 +9,9 @@
         <div class="info-window">
           <p class="title">{{this.car.brand}} {{this.car.model}}</p>
           <p><span class="bold-word">Номер:</span> {{this.car.licensePlate}}</p>
-          <p><span class="bold-word">ТО через:</span> {{this.car.kmBeforeMaint}} км.</p>
+          <p><span class="bold-word">ТО-1 через:</span> {{this.car.kmBeforeTo1}} км.</p>
+          <p><span class="bold-word">ТО-2 через:</span> {{this.car.kmBeforeTo2}} км.</p>
+          <p><span class="bold-word">КР через:</span> {{this.car.kmBeforeKr}} км.</p>
         </div>
       </GMapInfoWindow>
   </GMapMarker>
@@ -36,9 +38,13 @@ export default {
     },
 
     getIcon(){
-      if(this.car.kmBeforeMaint <= 0){
+      if(this.car.kmBeforeTo1 <= 0
+          || this.car.kmBeforeTo2 <= 0
+          || this.car.kmBeforeKr <=0) {
         return badMarker;
-      }else if(this.car.kmBeforeMaint < this.car.maintenanceFreq * 0.05){
+      }else if(this.car.kmBeforeTo1 < this.car.factTo1 * 0.05
+          || this.car.kmBeforeTo2 < this.car.factTo2 * 0.05
+          || this.car.kmBeforeKr < this.car.factKr * 0.05){
         return warningMarker;
       }else {
         return goodMarker;

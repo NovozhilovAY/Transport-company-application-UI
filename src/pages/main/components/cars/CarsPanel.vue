@@ -21,7 +21,7 @@
           <td>{{c.id}}</td>
           <td>{{c.brand}}</td>
           <td>{{c.model}}</td>
-          <td>{{c.licensePlate}}</td>
+          <td class="plate-cell"><PlateNumber :license-plate-number="c.licensePlate"></PlateNumber></td>
         </tr>
       </table>
       <button class="add-btn" @click="this.addCarModalOpen = true">+</button>
@@ -29,7 +29,9 @@
     <AddCarModal v-if="addCarModalOpen" @exit="closeAddCarModal" @saveCar="addCar"></AddCarModal>
     <div class="right-side">
       <CarInfo v-if="isDataLoaded && this.currentCars.length !== 0" v-bind:car="this.currentCars[selectedIndex]"
-               @doMaintenance="doMaintenance"
+               @doTo1="doTo1"
+               @doTo2="doTo2"
+               @doKr="doKr"
                @deleteCar="deleteCarById"
                @update="handleUpdatedCar"></CarInfo>
     </div>
@@ -41,10 +43,11 @@ import {CarService} from "@/services/CarService";
 import CarInfo from "@/pages/main/components/cars/CarInfo";
 import AddCarModal from "@/pages/main/components/cars/modals/AddCarModal";
 import SearchField from "@/pages/main/components/SearchField";
+import PlateNumber from "@/pages/main/components/cars/plateNumber/PlateNumber";
 
 export default {
   name: "CarsPanel",
-  components: {SearchField, AddCarModal, CarInfo},
+  components: {PlateNumber, SearchField, AddCarModal, CarInfo},
   data: function () {
     return {
       cars: [],
@@ -88,12 +91,14 @@ export default {
       })
     },
     isWarning(car){
-      if(car.kmBeforeMaint > 0 && car.kmBeforeMaint < car.maintenanceFreq * 0.05){
+      if((car.kmBeforeTo1 > 0 && car.kmBeforeTo1 < car.factTo1 * 0.05)
+          || (car.kmBeforeTo2 > 0 && car.kmBeforeTo2 < car.factTo2 * 0.05)
+          || (car.kmBeforeKr > 0 && car.kmBeforeKr < car.factKr * 0.05)){
         return true;
       }
     },
     isDanger(car){
-      if(car.kmBeforeMaint <= 0){
+      if(car.kmBeforeTo1 <= 0 || car.kmBeforeTo2 <=0 || car.kmBeforeKr <=0){
         return true;
       }
     },
@@ -105,6 +110,24 @@ export default {
       CarService.doMaintenance(car.id).then(result =>{
             this.handleUpdatedCar(result);
         }
+      );
+    },
+    doTo1(car){
+      CarService.doTo1(car.id).then(result =>{
+            this.handleUpdatedCar(result);
+          }
+      );
+    },
+    doTo2(car){
+      CarService.doTo2(car.id).then(result =>{
+            this.handleUpdatedCar(result);
+          }
+      );
+    },
+    doKr(car){
+      CarService.doKr(car.id).then(result =>{
+            this.handleUpdatedCar(result);
+          }
       );
     },
     deleteCarById(car){
@@ -231,14 +254,6 @@ th{
   background-color: #f88181;
 }
 
-table.cars-table tr.danger:hover td{
-  background-color: #ff5656;
-}
-
-table.cars-table tr.warning:hover td{
-  background-color: #ffff2c;
-}
-
 .add-btn{
   padding-left: 10px;
   padding-right: 10px;
@@ -255,5 +270,9 @@ table.cars-table tr.warning:hover td{
 
 .add-btn:hover{
   border-color: black;
+}
+
+.plate-cell{
+  width: 45%;
 }
 </style>
