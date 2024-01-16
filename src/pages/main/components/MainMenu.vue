@@ -69,7 +69,7 @@ export default {
   z-index: 1;
   top: 60px;
   left: 0;
-  background-color: white;
+  background-color: rgb(251, 231, 205);
   overflow-x: hidden;
   padding-top: 10px;
   border-right-style: solid;
@@ -79,7 +79,7 @@ export default {
 .sidenav button {
   width: 100%;
   border-style: none;
-  background-color: white;
+  background-color: rgb(251, 231, 205);
   padding: 12px 8px 12px 6px;
   margin-top: 5px;
   text-decoration: none;
@@ -101,6 +101,7 @@ export default {
   padding-top:60px;
   box-sizing: border-box;
   padding-left: 160px;
+  background-color: rgb(252, 244, 236);;
 }
 
 </style>

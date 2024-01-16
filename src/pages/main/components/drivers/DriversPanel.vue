@@ -153,6 +153,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   overflow-y: scroll;
+  background-color: rgb(252, 244, 236);
 }
 .table-container::-webkit-scrollbar{
   width: 0;

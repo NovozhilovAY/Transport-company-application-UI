@@ -41,7 +41,7 @@ export default {
   display: flex;
   height: 60px;
   width: auto;
-  background-color: white;
+  background-color: rgb(255,119,0);
   margin: 0px;
   box-sizing: border-box;
   border-bottom-style: solid;

@@ -35,7 +35,7 @@ export default {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-
+  background-color: rgb(252, 244, 236);
 }
 body{
   width: 100%;

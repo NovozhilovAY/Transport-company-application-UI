@@ -179,7 +179,7 @@ export default {
   display: flex;
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: rgb(252, 244, 236);
   margin: 0;
   box-sizing: border-box;
 }
